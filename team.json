@@ -1,0 +1,28 @@
+{
+  "team": [
+    {
+      "role": "Group Lead",
+      "name": "Adil Reyaz",
+      "enrollment_no": "2501010025",
+      "github_username": "ARRAEYY"
+    },
+    {
+      "role": "Member 2",
+      "name": "Utkarsh Singh",
+      "enrollment_no": "2501010488",
+      "github_username": "utksh1"
+    },
+    {
+      "role": "Member 3",
+      "name": "Renuka Yadav",
+      "enrollment_no": "2501010373",
+      "github_username": "Renuka11aug"
+    },
+    {
+      "role": "Member 4",
+      "name": "Shubham",
+      "enrollment_no": "2501010672",
+      "github_username": "ShubhamManglaw"
+    }
+  ]
+}
