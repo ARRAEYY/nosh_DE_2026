@@ -1,0 +1,45 @@
+=== R24 run 1 ===
+GroupAggregate  (cost=2454.93..2455.59 rows=33 width=16) (actual time=2.166..2.187 rows=37 loops=1)
+  Group Key: (date_trunc('month'::text, subscribed_at))
+  Buffers: shared hit=446
+  ->  Sort  (cost=2454.93..2455.02 rows=33 width=8) (actual time=2.154..2.159 rows=88 loops=1)
+        Sort Key: (date_trunc('month'::text, subscribed_at))
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=446
+        ->  Index Scan using subscriptions_pkey on subscriptions  (cost=0.29..2454.10 rows=33 width=8) (actual time=0.027..2.122 rows=88 loops=1)
+              Index Cond: (channel_id = 217)
+              Buffers: shared hit=443
+Planning:
+  Buffers: shared hit=89
+Planning Time: 0.346 ms
+Execution Time: 2.261 ms
+=== R24 run 2 ===
+GroupAggregate  (cost=2454.93..2455.59 rows=33 width=16) (actual time=1.298..1.319 rows=37 loops=1)
+  Group Key: (date_trunc('month'::text, subscribed_at))
+  Buffers: shared hit=446
+  ->  Sort  (cost=2454.93..2455.02 rows=33 width=8) (actual time=1.290..1.299 rows=88 loops=1)
+        Sort Key: (date_trunc('month'::text, subscribed_at))
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=446
+        ->  Index Scan using subscriptions_pkey on subscriptions  (cost=0.29..2454.10 rows=33 width=8) (actual time=0.017..1.270 rows=88 loops=1)
+              Index Cond: (channel_id = 217)
+              Buffers: shared hit=443
+Planning:
+  Buffers: shared hit=89
+Planning Time: 0.203 ms
+Execution Time: 1.369 ms
+=== R24 run 3 ===
+GroupAggregate  (cost=2454.93..2455.59 rows=33 width=16) (actual time=1.947..1.967 rows=37 loops=1)
+  Group Key: (date_trunc('month'::text, subscribed_at))
+  Buffers: shared hit=446
+  ->  Sort  (cost=2454.93..2455.02 rows=33 width=8) (actual time=1.937..1.942 rows=88 loops=1)
+        Sort Key: (date_trunc('month'::text, subscribed_at))
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=446
+        ->  Index Scan using subscriptions_pkey on subscriptions  (cost=0.29..2454.10 rows=33 width=8) (actual time=0.023..1.909 rows=88 loops=1)
+              Index Cond: (channel_id = 217)
+              Buffers: shared hit=443
+Planning:
+  Buffers: shared hit=89
+Planning Time: 0.263 ms
+Execution Time: 2.026 ms
