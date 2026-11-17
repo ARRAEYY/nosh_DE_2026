@@ -1,0 +1,84 @@
+=== R08 run 1 ===
+Sort  (cost=4471.33..4471.34 rows=4 width=49) (actual time=7.798..8.310 rows=5 loops=1)
+  Sort Key: (count(*)) DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=2040
+  ->  Finalize GroupAggregate  (cost=4470.66..4471.29 rows=4 width=49) (actual time=7.780..8.298 rows=5 loops=1)
+        Group Key: traffic_source
+        Buffers: shared hit=2037
+        ->  Gather Merge  (cost=4470.66..4471.20 rows=4 width=49) (actual time=7.767..8.282 rows=9 loops=1)
+              Workers Planned: 1
+              Workers Launched: 1
+              Buffers: shared hit=2037
+              ->  Partial GroupAggregate  (cost=3470.65..3470.74 rows=4 width=49) (actual time=6.708..6.711 rows=4 loops=2)
+                    Group Key: traffic_source
+                    Buffers: shared hit=2037
+                    ->  Sort  (cost=3470.65..3470.66 rows=5 width=13) (actual time=6.696..6.697 rows=7 loops=2)
+                          Sort Key: traffic_source
+                          Sort Method: quicksort  Memory: 25kB
+                          Buffers: shared hit=2037
+                          Worker 0:  Sort Method: quicksort  Memory: 25kB
+                          ->  Parallel Seq Scan on watch_events  (cost=0.00..3470.59 rows=5 width=13) (actual time=0.844..6.654 rows=7 loops=2)
+                                Filter: (video_id = 'ZkNSlUB1EOs'::bpchar)
+                                Rows Removed by Filter: 99993
+                                Buffers: shared hit=2000
+Planning:
+  Buffers: shared hit=112 read=1
+Planning Time: 0.281 ms
+Execution Time: 8.393 ms
+=== R08 run 2 ===
+Sort  (cost=4471.33..4471.34 rows=4 width=49) (actual time=7.833..8.338 rows=5 loops=1)
+  Sort Key: (count(*)) DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=2040
+  ->  Finalize GroupAggregate  (cost=4470.66..4471.29 rows=4 width=49) (actual time=7.816..8.326 rows=5 loops=1)
+        Group Key: traffic_source
+        Buffers: shared hit=2037
+        ->  Gather Merge  (cost=4470.66..4471.20 rows=4 width=49) (actual time=7.803..8.310 rows=10 loops=1)
+              Workers Planned: 1
+              Workers Launched: 1
+              Buffers: shared hit=2037
+              ->  Partial GroupAggregate  (cost=3470.65..3470.74 rows=4 width=49) (actual time=6.739..6.743 rows=5 loops=2)
+                    Group Key: traffic_source
+                    Buffers: shared hit=2037
+                    ->  Sort  (cost=3470.65..3470.66 rows=5 width=13) (actual time=6.728..6.729 rows=7 loops=2)
+                          Sort Key: traffic_source
+                          Sort Method: quicksort  Memory: 25kB
+                          Buffers: shared hit=2037
+                          Worker 0:  Sort Method: quicksort  Memory: 25kB
+                          ->  Parallel Seq Scan on watch_events  (cost=0.00..3470.59 rows=5 width=13) (actual time=0.874..6.678 rows=7 loops=2)
+                                Filter: (video_id = 'ZkNSlUB1EOs'::bpchar)
+                                Rows Removed by Filter: 99993
+                                Buffers: shared hit=2000
+Planning:
+  Buffers: shared hit=113
+Planning Time: 0.212 ms
+Execution Time: 8.415 ms
+=== R08 run 3 ===
+Sort  (cost=4471.33..4471.34 rows=4 width=49) (actual time=7.731..8.222 rows=5 loops=1)
+  Sort Key: (count(*)) DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=2040
+  ->  Finalize GroupAggregate  (cost=4470.66..4471.29 rows=4 width=49) (actual time=7.714..8.210 rows=5 loops=1)
+        Group Key: traffic_source
+        Buffers: shared hit=2037
+        ->  Gather Merge  (cost=4470.66..4471.20 rows=4 width=49) (actual time=7.701..8.193 rows=9 loops=1)
+              Workers Planned: 1
+              Workers Launched: 1
+              Buffers: shared hit=2037
+              ->  Partial GroupAggregate  (cost=3470.65..3470.74 rows=4 width=49) (actual time=6.667..6.671 rows=4 loops=2)
+                    Group Key: traffic_source
+                    Buffers: shared hit=2037
+                    ->  Sort  (cost=3470.65..3470.66 rows=5 width=13) (actual time=6.657..6.658 rows=7 loops=2)
+                          Sort Key: traffic_source
+                          Sort Method: quicksort  Memory: 25kB
+                          Buffers: shared hit=2037
+                          Worker 0:  Sort Method: quicksort  Memory: 25kB
+                          ->  Parallel Seq Scan on watch_events  (cost=0.00..3470.59 rows=5 width=13) (actual time=0.852..6.608 rows=7 loops=2)
+                                Filter: (video_id = 'ZkNSlUB1EOs'::bpchar)
+                                Rows Removed by Filter: 99993
+                                Buffers: shared hit=2000
+Planning:
+  Buffers: shared hit=113
+Planning Time: 0.216 ms
+Execution Time: 8.299 ms
