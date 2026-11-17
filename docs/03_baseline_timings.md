@@ -1,4 +1,4 @@
-# Phase 3 — Baseline Timings (CP2)
+# Phase 3: Baseline Timings (CP2)
 
 **Team:** Adil Reyaz (2501010025), Utkarsh Singh (2501010488), Renuka Yadav (2501010373), Shubham (2501010672)
 
@@ -7,8 +7,6 @@
 **How we measured:** `./benchmarks/run_benchmark.sh youtube baseline 3`. Every query runs inside `EXPLAIN (ANALYZE, BUFFERS)`, 3 times, and we report the average. The write queries (W01 to W05) run inside `BEGIN ... ROLLBACK`, so they never actually change the data. We closed other heavy programs, and we will use the same laptop for Phase 4 (CP3) and Phase 5 (CP4), so before/after numbers are comparable.
 
 **Why the baseline is bad on purpose.** The Phase 2 rules allowed only PK, UNIQUE, NOT NULL and CHECK constraints. No tuning indexes. PostgreSQL does index PRIMARY KEY and UNIQUE columns automatically (full list in `docs/02_schema_design.md`), but that is all we have. So this baseline measures the database as the previous team left it: correct constraints, but no fast paths for lookups except by key. Every full table scan (Seq Scan) below is a gap that Phase 4 fills with a specific index or rewrite. That is the point of the exercise: we cannot show improvement without first showing what is slow and why.
-
----
 
 ## How to read this document (EXPLAIN vocabulary)
 
@@ -24,13 +22,9 @@ Each query section shows the real `EXPLAIN (ANALYZE, BUFFERS)` output from run 1
 - **Workers Planned/Launched: 1**: the planner started an extra parallel worker process. For a query that returns 4 rows, hiring a worker is a waste.
 - **sargable**: a WHERE condition an index can actually use. `started_at >= '2026-06-01'` is sargable: it compares the raw column, so an index on started_at can jump straight to the right spot. `DATE(started_at) >= '2026-06-01'` is not: the column is wrapped in a function, so every row must be computed first and an index cannot help. Non-sargable conditions force full scans.
 
----
-
 ## Why run 1 is often slower than runs 2 and 3
 
 Several queries show run 1 clearly above runs 2 and 3. For example R01: 5.066, then 2.737, then 2.713 ms. And R25: 128.6, then 79.0, then 77.6 ms. The reason is caching. On run 1 the pages come from disk (`read`). On runs 2 and 3 they are already in PostgreSQL's memory (`hit`). We keep all three runs in the raw files so anyone can see both cold and warm behavior, and we report the average of 3 as the fair number.
-
----
 
 ## Timing table (all 30 queries)
 
@@ -69,8 +63,6 @@ Several queries show run 1 clearly above runs 2 and 3. For example R01: 5.066, t
 | **Total (sum of all 30)** | | **62692.59** | **62623.92** | **62647.09** | **30987.864** |
 
 **One query dominates everything.** R19 alone is 30,450 ms of the 30,988 ms total. That is 98.2%. The other 29 queries together are only 537 ms. So the practical priority is clear: fixing R19 is worth more than fixing everything else combined. After R19, the next tier is the 20 to 95 ms report queries (R11, R22, R25, R17, R16, R12, R18, R09, R14, R10, R20, R04).
-
----
 
 ## Per-query analysis
 
@@ -435,8 +427,6 @@ The subquery has to add up all 129,253 subscriptions grouped by channel. A full 
 
 Scans `videos` looking for SCHEDULED rows past their timestamp. The R06 partial index serves this UPDATE the same way it serves R06 itself: the index finds the rare scheduled rows without touching the rest of the table. One index, one read query and one write query.
 
----
-
 ## Patterns across the whole workload
 
 ### 1. What the five fast queries have in common
@@ -465,8 +455,6 @@ Very good, wherever it had statistics (we ran ANALYZE after loading, visible in 
 ### 4. Where the time actually is
 
 R19 is 98.2% of the total. The Phase 4 strategy follows directly: the one structural rewrite (R19, LATERAL) buys more than every index combined, and the index work then targets the 20-95 ms tier so every group meets its target on the large dataset.
-
----
 
 ## Totals and what "baseline" means
 

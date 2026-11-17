@@ -1,4 +1,4 @@
-# Phase 2 — Schema Design
+# Phase 2: Schema Design
 
 **Status: `sql/01_schema.sql` runs top to bottom on an empty database, `sql/02_load_data.sql` loads all 10 CSV files without a single error, and all 30 workload queries (R01 to R25, plus W01 to W05 inside `BEGIN ... ROLLBACK`) run successfully against the loaded data.**
 
@@ -31,7 +31,7 @@ Two type decisions we applied everywhere: all timestamps in the export carry `+0
 | email | VARCHAR(255) | NOT NULL, UNIQUE | This is how people log in. We checked it is unique across all 30,000 rows. |
 | display_name | VARCHAR(100) | NOT NULL | Always present in the export. Not unique: only 500 distinct names exist. |
 | country_code | CHAR(2) | NOT NULL, CHECK `~ '^[A-Z]{2}$'` | ISO country code, two uppercase letters. Values in data: AE, GB, IN, SG, US. |
-| birth_year | SMALLINT | NULL allowed, CHECK 1900–2013 | Empty in 4,433 rows, so age is optional. The range says nobody is born before 1900, and 2013 or earlier means at least about 13 years old in 2026 (a COPPA-style rule). Actual data: 1960 to 2009. |
+| birth_year | SMALLINT | NULL allowed, CHECK 1900-2013 | Empty in 4,433 rows, so age is optional. The range says nobody is born before 1900, and 2013 or earlier means at least about 13 years old in 2026 (a COPPA-style rule). Actual data: 1960 to 2009. |
 | premium_until | DATE | NULL allowed, CHECK >= signup date | Empty in 27,602 rows, meaning no active Premium. R25 compares this to `shown_at::date`, so DATE is the right type. |
 | created_at | TIMESTAMPTZ | NOT NULL | Account creation time, always present. |
 
@@ -87,7 +87,7 @@ Three column-pair rules on top: `videos_private_never_published` (PRIVATE means 
 | user_id | INTEGER | NULL allowed, FK -> users, ON DELETE CASCADE | NULL in 49,964 rows (25.0%). That means a logged-out view. We chose CASCADE, not SET NULL: if we set deleted users' views to NULL, they would count as "logged out" and quietly change the numbers in R12. Deleting the history is more honest. |
 | video_id | CHAR(11) | NOT NULL, FK -> videos, CASCADE | The video that was watched. |
 | started_at | TIMESTAMPTZ | NOT NULL | Range: 2025-01-01 to 2026-06-30. |
-| watch_seconds | INTEGER | NOT NULL, CHECK 0–86400 | 0 means clicked away instantly (458 rows). 86400 caps it at one day. Max in data: 3,718. |
+| watch_seconds | INTEGER | NOT NULL, CHECK 0-86400 | 0 means clicked away instantly (458 rows). 86400 caps it at one day. Max in data: 3,718. |
 | device | VARCHAR(10) | NOT NULL, CHECK IN (WEB, ANDROID, IOS, TV) | The four devices in the data. |
 | traffic_source | VARCHAR(15) | NOT NULL, CHECK IN (6 values) | HOME, SEARCH, SUGGESTED, SHORTS_FEED, SUBSCRIPTION, EXTERNAL. |
 

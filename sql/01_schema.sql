@@ -1,6 +1,6 @@
 -- ============================================================================
--- YouTube Video Sharing Database — schema rebuilt from the seed_data exports
--- CP1 / Phase 2 · Team: Adil Reyaz (2501010025), Utkarsh Singh (2501010488),
+-- YouTube Video Sharing Database - schema rebuilt from the seed_data exports
+-- CP1 / Phase 2, Team: Adil Reyaz (2501010025), Utkarsh Singh (2501010488),
 --                      Renuka Yadav (2501010373), Shubham (2501010672)
 --
 -- Runs top-to-bottom on an empty PostgreSQL 15+ database.
@@ -9,7 +9,7 @@
 -- are in docs/02_schema_design.md.
 --
 -- Per the project rules this file creates ONLY constraints:
--- PK / FK / UNIQUE / NOT NULL / CHECK — no extra indexes. (PostgreSQL
+-- PK / FK / UNIQUE / NOT NULL / CHECK - no extra indexes. (PostgreSQL
 -- automatically indexes PRIMARY KEY and UNIQUE columns; the inventory of
 -- those automatic indexes is listed in docs/02_schema_design.md.)
 -- ============================================================================
@@ -20,7 +20,7 @@ CREATE SCHEMA youtube;
 SET search_path TO youtube;
 
 -- ----------------------------------------------------------------------------
--- 1. users — signed-in YouTube accounts (30,000 rows in the seed export)
+-- 1. users - signed-in YouTube accounts (30,000 rows in the seed export)
 -- ----------------------------------------------------------------------------
 CREATE TABLE users (
     user_id       INTEGER       PRIMARY KEY,        -- surrogate id from the export
@@ -41,7 +41,7 @@ CREATE TABLE users (
 );
 
 -- ----------------------------------------------------------------------------
--- 2. channels — creator channels (3,000 rows), each owned by one user
+-- 2. channels - creator channels (3,000 rows), each owned by one user
 -- ----------------------------------------------------------------------------
 CREATE TABLE channels (
     channel_id          INTEGER       PRIMARY KEY,
@@ -70,7 +70,7 @@ CREATE TABLE channels (
 -- not a business rule, so it is not constrained.
 
 -- ----------------------------------------------------------------------------
--- 3. videos — long videos and Shorts (30,000 rows)
+-- 3. videos - long videos and Shorts (30,000 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE videos (
     video_id         CHAR(11)      PRIMARY KEY,     -- 11-character YouTube id
@@ -108,12 +108,12 @@ CREATE TABLE videos (
         CHECK (view_count >= 0)
 );
 -- In the seed data is_short is EXACTLY (duration_sec <= 60): every Short is
--- 10–59 s and every regular video is 61 s or longer. Only the business rule
--- ("a Short is at most 60 s") is constrained — a future 45 s regular upload
+-- 10-59 s and every regular video is 61 s or longer. Only the business rule
+-- ("a Short is at most 60 s") is constrained - a future 45 s regular upload
 -- must remain legal.
 
 -- ----------------------------------------------------------------------------
--- 4. subscriptions — which user follows which channel (129,253 rows)
+-- 4. subscriptions - which user follows which channel (129,253 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE subscriptions (
     user_id       INTEGER      NOT NULL REFERENCES users (user_id)
@@ -128,7 +128,7 @@ CREATE TABLE subscriptions (
 );
 
 -- ----------------------------------------------------------------------------
--- 5. watch_events — every view, signed in or not (200,000 rows)
+-- 5. watch_events - every view, signed in or not (200,000 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE watch_events (
     watch_id       INTEGER      PRIMARY KEY,       -- plain INTEGER: workload W02 supplies ids
@@ -157,7 +157,7 @@ CREATE TABLE watch_events (
 -- check in docs/02_schema_design.md rather than a CHECK constraint.
 
 -- ----------------------------------------------------------------------------
--- 6. video_reactions — likes and dislikes (67,417 rows)
+-- 6. video_reactions - likes and dislikes (67,417 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE video_reactions (
     user_id    INTEGER     NOT NULL REFERENCES users (user_id)
@@ -172,7 +172,7 @@ CREATE TABLE video_reactions (
 );
 
 -- ----------------------------------------------------------------------------
--- 7. comments — comments and replies (60,000 rows)
+-- 7. comments - comments and replies (60,000 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE comments (
     comment_id        INTEGER        PRIMARY KEY,
@@ -198,7 +198,7 @@ CREATE TABLE comments (
 -- YouTube's "delete thread" behaviour.
 
 -- ----------------------------------------------------------------------------
--- 8. playlists — user playlists (8,000 rows)
+-- 8. playlists - user playlists (8,000 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE playlists (
     playlist_id   INTEGER       PRIMARY KEY,
@@ -213,7 +213,7 @@ CREATE TABLE playlists (
 );
 
 -- ----------------------------------------------------------------------------
--- 9. playlist_items — videos inside each playlist, in order (56,005 rows)
+-- 9. playlist_items - videos inside each playlist, in order (56,005 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE playlist_items (
     playlist_id INTEGER      NOT NULL REFERENCES playlists (playlist_id)
@@ -232,7 +232,7 @@ CREATE TABLE playlist_items (
 -- to contain no duplicates (verified as integrity check #3 in the docs).
 
 -- ----------------------------------------------------------------------------
--- 10. ad_impressions — ads shown during views and revenue earned (57,014 rows)
+-- 10. ad_impressions - ads shown during views and revenue earned (57,014 rows)
 -- ----------------------------------------------------------------------------
 CREATE TABLE ad_impressions (
     impression_id INTEGER       PRIMARY KEY,
@@ -247,7 +247,7 @@ CREATE TABLE ad_impressions (
     CONSTRAINT ad_impressions_revenue_nonnegative
         CHECK (revenue_inr >= 0)
 );
--- ON DELETE RESTRICT: an ad impression is a financial record — it pays the
+-- ON DELETE RESTRICT: an ad impression is a financial record - it pays the
 -- creator and feeds partner-program reports (R16, R19, R25). Deleting a watch
 -- event that carried ads would silently destroy revenue history, so the
 -- database refuses until the impressions are explicitly archived. The

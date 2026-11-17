@@ -1,4 +1,4 @@
-# Phase 1 — Problem Understanding
+# Phase 1: Problem Understanding
 
 We are the new database team for a YouTube-like video platform (the "YouTube India" data). The old team left no schema documentation. All we have is raw CSV exports of the data. Nine different teams have reported problems to us.
 
