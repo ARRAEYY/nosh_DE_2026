@@ -1,0 +1,115 @@
+=== R05 run 1 ===
+Limit  (cost=77.46..77.48 rows=6 width=48) (actual time=0.139..0.141 rows=4 loops=1)
+  Buffers: shared hit=11 read=11
+  ->  Sort  (cost=77.46..77.48 rows=6 width=48) (actual time=0.139..0.139 rows=4 loops=1)
+        Sort Key: w.started_at DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=11 read=11
+        ->  Nested Loop  (cost=4.75..77.39 rows=6 width=48) (actual time=0.064..0.122 rows=4 loops=1)
+              Buffers: shared hit=8 read=11
+              ->  Bitmap Heap Scan on watch_events w  (cost=4.47..27.56 rows=6 width=24) (actual time=0.048..0.073 rows=4 loops=1)
+                    Recheck Cond: (user_id = 1042)
+                    Heap Blocks: exact=4
+                    Buffers: shared read=7
+                    ->  Bitmap Index Scan on idx_watch_events_user_started  (cost=0.00..4.46 rows=6 width=0) (actual time=0.039..0.039 rows=4 loops=1)
+                          Index Cond: (user_id = 1042)
+                          Buffers: shared read=3
+              ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=36) (actual time=0.011..0.011 rows=1 loops=4)
+                    Index Cond: (video_id = w.video_id)
+                    Buffers: shared hit=8 read=4
+Planning:
+  Buffers: shared hit=404 read=20
+Planning Time: 0.865 ms
+Execution Time: 0.177 ms
+=== R05 run 2 ===
+Limit  (cost=77.46..77.48 rows=6 width=48) (actual time=0.060..0.061 rows=4 loops=1)
+  Buffers: shared hit=22
+  ->  Sort  (cost=77.46..77.48 rows=6 width=48) (actual time=0.059..0.060 rows=4 loops=1)
+        Sort Key: w.started_at DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=22
+        ->  Nested Loop  (cost=4.75..77.39 rows=6 width=48) (actual time=0.022..0.042 rows=4 loops=1)
+              Buffers: shared hit=19
+              ->  Bitmap Heap Scan on watch_events w  (cost=4.47..27.56 rows=6 width=24) (actual time=0.011..0.014 rows=4 loops=1)
+                    Recheck Cond: (user_id = 1042)
+                    Heap Blocks: exact=4
+                    Buffers: shared hit=7
+                    ->  Bitmap Index Scan on idx_watch_events_user_started  (cost=0.00..4.46 rows=6 width=0) (actual time=0.008..0.008 rows=4 loops=1)
+                          Index Cond: (user_id = 1042)
+                          Buffers: shared hit=3
+              ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=36) (actual time=0.006..0.006 rows=1 loops=4)
+                    Index Cond: (video_id = w.video_id)
+                    Buffers: shared hit=12
+Planning:
+  Buffers: shared hit=424
+Planning Time: 0.687 ms
+Execution Time: 0.117 ms
+=== R05 run 3 ===
+Limit  (cost=77.46..77.48 rows=6 width=48) (actual time=0.056..0.057 rows=4 loops=1)
+  Buffers: shared hit=22
+  ->  Sort  (cost=77.46..77.48 rows=6 width=48) (actual time=0.055..0.056 rows=4 loops=1)
+        Sort Key: w.started_at DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=22
+        ->  Nested Loop  (cost=4.75..77.39 rows=6 width=48) (actual time=0.020..0.040 rows=4 loops=1)
+              Buffers: shared hit=19
+              ->  Bitmap Heap Scan on watch_events w  (cost=4.47..27.56 rows=6 width=24) (actual time=0.010..0.013 rows=4 loops=1)
+                    Recheck Cond: (user_id = 1042)
+                    Heap Blocks: exact=4
+                    Buffers: shared hit=7
+                    ->  Bitmap Index Scan on idx_watch_events_user_started  (cost=0.00..4.46 rows=6 width=0) (actual time=0.008..0.008 rows=4 loops=1)
+                          Index Cond: (user_id = 1042)
+                          Buffers: shared hit=3
+              ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=36) (actual time=0.005..0.005 rows=1 loops=4)
+                    Index Cond: (video_id = w.video_id)
+                    Buffers: shared hit=12
+Planning:
+  Buffers: shared hit=424
+Planning Time: 0.675 ms
+Execution Time: 0.091 ms
+=== R05 run 4 ===
+Limit  (cost=77.46..77.48 rows=6 width=48) (actual time=0.055..0.057 rows=4 loops=1)
+  Buffers: shared hit=22
+  ->  Sort  (cost=77.46..77.48 rows=6 width=48) (actual time=0.054..0.055 rows=4 loops=1)
+        Sort Key: w.started_at DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=22
+        ->  Nested Loop  (cost=4.75..77.39 rows=6 width=48) (actual time=0.020..0.039 rows=4 loops=1)
+              Buffers: shared hit=19
+              ->  Bitmap Heap Scan on watch_events w  (cost=4.47..27.56 rows=6 width=24) (actual time=0.010..0.013 rows=4 loops=1)
+                    Recheck Cond: (user_id = 1042)
+                    Heap Blocks: exact=4
+                    Buffers: shared hit=7
+                    ->  Bitmap Index Scan on idx_watch_events_user_started  (cost=0.00..4.46 rows=6 width=0) (actual time=0.007..0.008 rows=4 loops=1)
+                          Index Cond: (user_id = 1042)
+                          Buffers: shared hit=3
+              ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=36) (actual time=0.005..0.005 rows=1 loops=4)
+                    Index Cond: (video_id = w.video_id)
+                    Buffers: shared hit=12
+Planning:
+  Buffers: shared hit=424
+Planning Time: 0.652 ms
+Execution Time: 0.095 ms
+=== R05 run 5 ===
+Limit  (cost=77.46..77.48 rows=6 width=48) (actual time=0.056..0.057 rows=4 loops=1)
+  Buffers: shared hit=22
+  ->  Sort  (cost=77.46..77.48 rows=6 width=48) (actual time=0.055..0.056 rows=4 loops=1)
+        Sort Key: w.started_at DESC
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=22
+        ->  Nested Loop  (cost=4.75..77.39 rows=6 width=48) (actual time=0.020..0.040 rows=4 loops=1)
+              Buffers: shared hit=19
+              ->  Bitmap Heap Scan on watch_events w  (cost=4.47..27.56 rows=6 width=24) (actual time=0.010..0.012 rows=4 loops=1)
+                    Recheck Cond: (user_id = 1042)
+                    Heap Blocks: exact=4
+                    Buffers: shared hit=7
+                    ->  Bitmap Index Scan on idx_watch_events_user_started  (cost=0.00..4.46 rows=6 width=0) (actual time=0.007..0.007 rows=4 loops=1)
+                          Index Cond: (user_id = 1042)
+                          Buffers: shared hit=3
+              ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=36) (actual time=0.006..0.006 rows=1 loops=4)
+                    Index Cond: (video_id = w.video_id)
+                    Buffers: shared hit=12
+Planning:
+  Buffers: shared hit=424
+Planning Time: 0.663 ms
+Execution Time: 0.088 ms

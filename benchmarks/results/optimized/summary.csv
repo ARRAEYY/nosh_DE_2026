@@ -1,0 +1,31 @@
+query_id,type,avg_ms,median_ms,min_ms,max_ms,scan_nodes
+R01,READ,0.113,0.082,0.074,0.177,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_channel_published_public
+R02,READ,0.044,0.040,0.037,0.058,Index Scan using videos_pkey on videos | Index Scan using channels_pkey on channels
+R03,READ,0.386,0.256,0.243,0.908,Index Only Scan using subscriptions_pkey on subscriptions | Index Scan using channels_pkey on channels | Index Only Scan using idx_videos_channel_published_public on videos
+R04,READ,18.283,17.660,17.626,20.188,Seq Scan on videos
+R05,READ,0.114,0.095,0.088,0.177,Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_user_started | Index Scan using videos_pkey on videos
+R06,READ,0.129,0.125,0.114,0.145,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_scheduled_published
+R07,READ,0.435,0.402,0.383,0.557,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_channel_uploaded | Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_video_user | Bitmap Index Scan on idx_watch_events_started_brin
+R08,READ,0.148,0.125,0.115,0.238,Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_video_user
+R09,READ,0.457,0.378,0.372,0.759,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_channel_uploaded | Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_video_user
+R10,READ,5.763,5.724,5.439,6.057,Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_started_brin | Seq Scan on videos
+R11,READ,24.732,23.397,22.835,30.252,Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_started_brin | Seq Scan on videos
+R12,READ,28.839,24.975,24.187,41.753,Seq Scan on watch_events
+R13,READ,0.530,0.424,0.409,0.954,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_channel_uploaded | Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_video_user | Bitmap Heap Scan on subscriptions | Bitmap Index Scan on idx_subscriptions_channel_subscribed
+R14,READ,0.321,0.268,0.248,0.506,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_channel_uploaded | Bitmap Heap Scan on video_reactions | Bitmap Index Scan on idx_video_reactions_video
+R15,READ,0.072,0.060,0.059,0.099,Bitmap Heap Scan on comments | Bitmap Index Scan on idx_comments_video_top
+R16,READ,23.991,22.674,22.354,29.539,Seq Scan on watch_events | Bitmap Heap Scan on ad_impressions | Bitmap Index Scan on idx_ad_impressions_shown_brin | Index Scan using videos_pkey on videos
+R17,READ,30.756,27.966,27.679,42.016,Seq Scan on videos | Seq Scan on channels | Index Scan using idx_watch_events_video_user on watch_events
+R18,READ,2.245,1.849,1.700,4.012,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_made_for_kids | Index Only Scan using idx_comments_video on comments
+R19,READ,96.542,96.039,94.678,100.126,Seq Scan on channels | Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_channel_uploaded | Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_video_user | Index Only Scan using idx_videos_channel_uploaded on videos
+R20,READ,4.748,4.728,4.698,4.834,Bitmap Heap Scan on watch_events | Bitmap Index Scan on idx_watch_events_started_brin
+R21,READ,0.141,0.123,0.123,0.205,Index Scan using playlist_items_pkey on playlist_items | Index Scan using videos_pkey on videos
+R22,READ,32.495,32.296,32.264,32.918,Seq Scan on videos
+R23,READ,6.160,5.787,5.737,7.624,Index Only Scan using idx_comments_created_id_desc on comments
+R24,READ,0.225,0.221,0.203,0.248,Bitmap Heap Scan on subscriptions | Bitmap Index Scan on idx_subscriptions_channel_subscribed
+R25,READ,87.778,86.811,85.078,94.028,Seq Scan on watch_events | Seq Scan on ad_impressions | Seq Scan on users
+W01,WRITE,0.786,0.757,0.733,0.913,(no scan)
+W02,WRITE,1.035,1.016,0.978,1.149,(no scan)
+W03,WRITE,0.377,0.379,0.353,0.408,Index Scan using videos_pkey on videos
+W04,WRITE,53.674,51.893,51.240,60.040,Seq Scan on channels | Seq Scan on subscriptions
+W05,WRITE,0.548,0.529,0.470,0.694,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_scheduled_published

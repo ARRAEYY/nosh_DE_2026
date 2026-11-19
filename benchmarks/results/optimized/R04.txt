@@ -1,0 +1,75 @@
+=== R04 run 1 ===
+Limit  (cost=1156.41..1156.46 rows=20 width=44) (actual time=20.164..20.168 rows=20 loops=1)
+  Buffers: shared hit=142 read=509
+  ->  Sort  (cost=1156.41..1161.90 rows=2195 width=44) (actual time=20.162..20.164 rows=20 loops=1)
+        Sort Key: view_count DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=142 read=509
+        ->  Seq Scan on videos  (cost=0.00..1098.00 rows=2195 width=44) (actual time=0.015..19.776 rows=2191 loops=1)
+              Filter: (((title)::text ~~* '%tutorial%'::text) AND ((visibility)::text = 'PUBLIC'::text))
+              Rows Removed by Filter: 27809
+              Buffers: shared hit=139 read=509
+Planning:
+  Buffers: shared hit=206
+Planning Time: 0.433 ms
+Execution Time: 20.188 ms
+=== R04 run 2 ===
+Limit  (cost=1156.41..1156.46 rows=20 width=44) (actual time=18.271..18.275 rows=20 loops=1)
+  Buffers: shared hit=651
+  ->  Sort  (cost=1156.41..1161.90 rows=2195 width=44) (actual time=18.270..18.271 rows=20 loops=1)
+        Sort Key: view_count DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=651
+        ->  Seq Scan on videos  (cost=0.00..1098.00 rows=2195 width=44) (actual time=0.026..17.900 rows=2191 loops=1)
+              Filter: (((title)::text ~~* '%tutorial%'::text) AND ((visibility)::text = 'PUBLIC'::text))
+              Rows Removed by Filter: 27809
+              Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=206
+Planning Time: 0.407 ms
+Execution Time: 18.292 ms
+=== R04 run 3 ===
+Limit  (cost=1156.41..1156.46 rows=20 width=44) (actual time=17.623..17.627 rows=20 loops=1)
+  Buffers: shared hit=651
+  ->  Sort  (cost=1156.41..1161.90 rows=2195 width=44) (actual time=17.621..17.623 rows=20 loops=1)
+        Sort Key: view_count DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=651
+        ->  Seq Scan on videos  (cost=0.00..1098.00 rows=2195 width=44) (actual time=0.021..17.252 rows=2191 loops=1)
+              Filter: (((title)::text ~~* '%tutorial%'::text) AND ((visibility)::text = 'PUBLIC'::text))
+              Rows Removed by Filter: 27809
+              Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=206
+Planning Time: 0.425 ms
+Execution Time: 17.647 ms
+=== R04 run 4 ===
+Limit  (cost=1156.41..1156.46 rows=20 width=44) (actual time=17.638..17.642 rows=20 loops=1)
+  Buffers: shared hit=651
+  ->  Sort  (cost=1156.41..1161.90 rows=2195 width=44) (actual time=17.637..17.638 rows=20 loops=1)
+        Sort Key: view_count DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=651
+        ->  Seq Scan on videos  (cost=0.00..1098.00 rows=2195 width=44) (actual time=0.018..17.284 rows=2191 loops=1)
+              Filter: (((title)::text ~~* '%tutorial%'::text) AND ((visibility)::text = 'PUBLIC'::text))
+              Rows Removed by Filter: 27809
+              Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=206
+Planning Time: 0.434 ms
+Execution Time: 17.660 ms
+=== R04 run 5 ===
+Limit  (cost=1156.41..1156.46 rows=20 width=44) (actual time=17.606..17.610 rows=20 loops=1)
+  Buffers: shared hit=651
+  ->  Sort  (cost=1156.41..1161.90 rows=2195 width=44) (actual time=17.605..17.606 rows=20 loops=1)
+        Sort Key: view_count DESC
+        Sort Method: top-N heapsort  Memory: 28kB
+        Buffers: shared hit=651
+        ->  Seq Scan on videos  (cost=0.00..1098.00 rows=2195 width=44) (actual time=0.016..17.236 rows=2191 loops=1)
+              Filter: (((title)::text ~~* '%tutorial%'::text) AND ((visibility)::text = 'PUBLIC'::text))
+              Rows Removed by Filter: 27809
+              Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=206
+Planning Time: 0.412 ms
+Execution Time: 17.626 ms

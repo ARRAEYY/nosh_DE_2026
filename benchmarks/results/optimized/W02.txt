@@ -1,0 +1,50 @@
+=== W02 run 1 ===
+Insert on watch_events  (cost=0.00..0.01 rows=0 width=0) (actual time=0.416..0.416 rows=0 loops=1)
+  Buffers: shared hit=161 read=6 dirtied=6
+  ->  Result  (cost=0.00..0.01 rows=1 width=154) (actual time=0.001..0.001 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.047 ms
+Trigger for constraint watch_events_user_id_fkey: time=0.395 calls=1
+Trigger for constraint watch_events_video_id_fkey: time=0.321 calls=1
+Execution Time: 1.149 ms
+=== W02 run 2 ===
+Insert on watch_events  (cost=0.00..0.01 rows=0 width=0) (actual time=0.366..0.366 rows=0 loops=1)
+  Buffers: shared hit=168 dirtied=1
+  ->  Result  (cost=0.00..0.01 rows=1 width=154) (actual time=0.001..0.001 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.048 ms
+Trigger for constraint watch_events_user_id_fkey: time=0.346 calls=1
+Trigger for constraint watch_events_video_id_fkey: time=0.293 calls=1
+Execution Time: 1.021 ms
+=== W02 run 3 ===
+Insert on watch_events  (cost=0.00..0.01 rows=0 width=0) (actual time=0.351..0.351 rows=0 loops=1)
+  Buffers: shared hit=168 dirtied=1
+  ->  Result  (cost=0.00..0.01 rows=1 width=154) (actual time=0.001..0.001 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.047 ms
+Trigger for constraint watch_events_user_id_fkey: time=0.360 calls=1
+Trigger for constraint watch_events_video_id_fkey: time=0.283 calls=1
+Execution Time: 1.010 ms
+=== W02 run 4 ===
+Insert on watch_events  (cost=0.00..0.01 rows=0 width=0) (actual time=0.332..0.332 rows=0 loops=1)
+  Buffers: shared hit=168 dirtied=1
+  ->  Result  (cost=0.00..0.01 rows=1 width=154) (actual time=0.001..0.001 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.047 ms
+Trigger for constraint watch_events_user_id_fkey: time=0.347 calls=1
+Trigger for constraint watch_events_video_id_fkey: time=0.283 calls=1
+Execution Time: 0.978 ms
+=== W02 run 5 ===
+Insert on watch_events  (cost=0.00..0.01 rows=0 width=0) (actual time=0.336..0.336 rows=0 loops=1)
+  Buffers: shared hit=168 dirtied=1
+  ->  Result  (cost=0.00..0.01 rows=1 width=154) (actual time=0.001..0.002 rows=1 loops=1)
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.045 ms
+Trigger for constraint watch_events_user_id_fkey: time=0.360 calls=1
+Trigger for constraint watch_events_video_id_fkey: time=0.302 calls=1
+Execution Time: 1.016 ms

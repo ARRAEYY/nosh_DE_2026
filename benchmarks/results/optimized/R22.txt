@@ -1,0 +1,110 @@
+=== R22 run 1 ===
+Limit  (cost=3638.64..3638.76 rows=50 width=44) (actual time=32.761..32.767 rows=50 loops=1)
+  Buffers: shared hit=657
+  ->  Sort  (cost=3638.64..3641.63 rows=1198 width=44) (actual time=32.759..32.762 rows=50 loops=1)
+        Sort Key: (count(DISTINCT channel_id)) DESC, (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 30kB
+        Buffers: shared hit=657
+        ->  GroupAggregate  (cost=3178.90..3598.84 rows=1198 width=44) (actual time=23.766..32.294 rows=3800 loops=1)
+              Group Key: title, duration_sec
+              Filter: (count(DISTINCT channel_id) > 1)
+              Rows Removed by Filter: 19228
+              Buffers: shared hit=654
+              ->  Sort  (cost=3178.90..3253.90 rows=30000 width=32) (actual time=23.751..25.803 rows=30000 loops=1)
+                    Sort Key: title, duration_sec, channel_id
+                    Sort Method: quicksort  Memory: 2546kB
+                    Buffers: shared hit=654
+                    ->  Seq Scan on videos  (cost=0.00..948.00 rows=30000 width=32) (actual time=0.009..3.943 rows=30000 loops=1)
+                          Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=224
+Planning Time: 0.356 ms
+Execution Time: 32.918 ms
+=== R22 run 2 ===
+Limit  (cost=3638.64..3638.76 rows=50 width=44) (actual time=32.565..32.572 rows=50 loops=1)
+  Buffers: shared hit=657
+  ->  Sort  (cost=3638.64..3641.63 rows=1198 width=44) (actual time=32.564..32.567 rows=50 loops=1)
+        Sort Key: (count(DISTINCT channel_id)) DESC, (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 30kB
+        Buffers: shared hit=657
+        ->  GroupAggregate  (cost=3178.90..3598.84 rows=1198 width=44) (actual time=23.375..32.104 rows=3800 loops=1)
+              Group Key: title, duration_sec
+              Filter: (count(DISTINCT channel_id) > 1)
+              Rows Removed by Filter: 19228
+              Buffers: shared hit=654
+              ->  Sort  (cost=3178.90..3253.90 rows=30000 width=32) (actual time=23.361..25.518 rows=30000 loops=1)
+                    Sort Key: title, duration_sec, channel_id
+                    Sort Method: quicksort  Memory: 2546kB
+                    Buffers: shared hit=654
+                    ->  Seq Scan on videos  (cost=0.00..948.00 rows=30000 width=32) (actual time=0.009..3.938 rows=30000 loops=1)
+                          Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=224
+Planning Time: 0.344 ms
+Execution Time: 32.720 ms
+=== R22 run 3 ===
+Limit  (cost=3638.64..3638.76 rows=50 width=44) (actual time=32.147..32.154 rows=50 loops=1)
+  Buffers: shared hit=657
+  ->  Sort  (cost=3638.64..3641.63 rows=1198 width=44) (actual time=32.146..32.149 rows=50 loops=1)
+        Sort Key: (count(DISTINCT channel_id)) DESC, (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 30kB
+        Buffers: shared hit=657
+        ->  GroupAggregate  (cost=3178.90..3598.84 rows=1198 width=44) (actual time=23.155..31.682 rows=3800 loops=1)
+              Group Key: title, duration_sec
+              Filter: (count(DISTINCT channel_id) > 1)
+              Rows Removed by Filter: 19228
+              Buffers: shared hit=654
+              ->  Sort  (cost=3178.90..3253.90 rows=30000 width=32) (actual time=23.143..25.148 rows=30000 loops=1)
+                    Sort Key: title, duration_sec, channel_id
+                    Sort Method: quicksort  Memory: 2546kB
+                    Buffers: shared hit=654
+                    ->  Seq Scan on videos  (cost=0.00..948.00 rows=30000 width=32) (actual time=0.009..3.857 rows=30000 loops=1)
+                          Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=224
+Planning Time: 0.386 ms
+Execution Time: 32.296 ms
+=== R22 run 4 ===
+Limit  (cost=3638.64..3638.76 rows=50 width=44) (actual time=32.118..32.125 rows=50 loops=1)
+  Buffers: shared hit=657
+  ->  Sort  (cost=3638.64..3641.63 rows=1198 width=44) (actual time=32.117..32.120 rows=50 loops=1)
+        Sort Key: (count(DISTINCT channel_id)) DESC, (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 30kB
+        Buffers: shared hit=657
+        ->  GroupAggregate  (cost=3178.90..3598.84 rows=1198 width=44) (actual time=23.120..31.647 rows=3800 loops=1)
+              Group Key: title, duration_sec
+              Filter: (count(DISTINCT channel_id) > 1)
+              Rows Removed by Filter: 19228
+              Buffers: shared hit=654
+              ->  Sort  (cost=3178.90..3253.90 rows=30000 width=32) (actual time=23.107..25.125 rows=30000 loops=1)
+                    Sort Key: title, duration_sec, channel_id
+                    Sort Method: quicksort  Memory: 2546kB
+                    Buffers: shared hit=654
+                    ->  Seq Scan on videos  (cost=0.00..948.00 rows=30000 width=32) (actual time=0.009..3.793 rows=30000 loops=1)
+                          Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=224
+Planning Time: 0.347 ms
+Execution Time: 32.264 ms
+=== R22 run 5 ===
+Limit  (cost=3638.64..3638.76 rows=50 width=44) (actual time=32.112..32.119 rows=50 loops=1)
+  Buffers: shared hit=657
+  ->  Sort  (cost=3638.64..3641.63 rows=1198 width=44) (actual time=32.111..32.114 rows=50 loops=1)
+        Sort Key: (count(DISTINCT channel_id)) DESC, (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 30kB
+        Buffers: shared hit=657
+        ->  GroupAggregate  (cost=3178.90..3598.84 rows=1198 width=44) (actual time=23.109..31.644 rows=3800 loops=1)
+              Group Key: title, duration_sec
+              Filter: (count(DISTINCT channel_id) > 1)
+              Rows Removed by Filter: 19228
+              Buffers: shared hit=654
+              ->  Sort  (cost=3178.90..3253.90 rows=30000 width=32) (actual time=23.095..25.118 rows=30000 loops=1)
+                    Sort Key: title, duration_sec, channel_id
+                    Sort Method: quicksort  Memory: 2546kB
+                    Buffers: shared hit=654
+                    ->  Seq Scan on videos  (cost=0.00..948.00 rows=30000 width=32) (actual time=0.008..3.696 rows=30000 loops=1)
+                          Buffers: shared hit=648
+Planning:
+  Buffers: shared hit=224
+Planning Time: 0.358 ms
+Execution Time: 32.275 ms

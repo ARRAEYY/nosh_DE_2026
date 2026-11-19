@@ -1,0 +1,65 @@
+=== R21 run 1 ===
+Nested Loop  (cost=0.58..77.05 rows=7 width=42) (actual time=0.046..0.170 rows=11 loops=1)
+  Buffers: shared hit=33 read=3
+  ->  Index Scan using playlist_items_pkey on playlist_items pi  (cost=0.29..18.91 rows=7 width=14) (actual time=0.028..0.030 rows=11 loops=1)
+        Index Cond: (playlist_id = 501)
+        Buffers: shared read=3
+  ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=40) (actual time=0.012..0.012 rows=1 loops=11)
+        Index Cond: (video_id = pi.video_id)
+        Buffers: shared hit=33
+Planning:
+  Buffers: shared hit=309 read=1 dirtied=1
+Planning Time: 0.529 ms
+Execution Time: 0.205 ms
+=== R21 run 2 ===
+Nested Loop  (cost=0.58..77.05 rows=7 width=42) (actual time=0.023..0.089 rows=11 loops=1)
+  Buffers: shared hit=36
+  ->  Index Scan using playlist_items_pkey on playlist_items pi  (cost=0.29..18.91 rows=7 width=14) (actual time=0.008..0.009 rows=11 loops=1)
+        Index Cond: (playlist_id = 501)
+        Buffers: shared hit=3
+  ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=40) (actual time=0.006..0.006 rows=1 loops=11)
+        Index Cond: (video_id = pi.video_id)
+        Buffers: shared hit=33
+Planning:
+  Buffers: shared hit=310
+Planning Time: 0.472 ms
+Execution Time: 0.123 ms
+=== R21 run 3 ===
+Nested Loop  (cost=0.58..77.05 rows=7 width=42) (actual time=0.022..0.088 rows=11 loops=1)
+  Buffers: shared hit=36
+  ->  Index Scan using playlist_items_pkey on playlist_items pi  (cost=0.29..18.91 rows=7 width=14) (actual time=0.008..0.010 rows=11 loops=1)
+        Index Cond: (playlist_id = 501)
+        Buffers: shared hit=3
+  ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=40) (actual time=0.006..0.006 rows=1 loops=11)
+        Index Cond: (video_id = pi.video_id)
+        Buffers: shared hit=33
+Planning:
+  Buffers: shared hit=310
+Planning Time: 0.473 ms
+Execution Time: 0.123 ms
+=== R21 run 4 ===
+Nested Loop  (cost=0.58..77.05 rows=7 width=42) (actual time=0.023..0.099 rows=11 loops=1)
+  Buffers: shared hit=36
+  ->  Index Scan using playlist_items_pkey on playlist_items pi  (cost=0.29..18.91 rows=7 width=14) (actual time=0.008..0.010 rows=11 loops=1)
+        Index Cond: (playlist_id = 501)
+        Buffers: shared hit=3
+  ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=40) (actual time=0.006..0.006 rows=1 loops=11)
+        Index Cond: (video_id = pi.video_id)
+        Buffers: shared hit=33
+Planning:
+  Buffers: shared hit=310
+Planning Time: 0.459 ms
+Execution Time: 0.133 ms
+=== R21 run 5 ===
+Nested Loop  (cost=0.58..77.05 rows=7 width=42) (actual time=0.022..0.088 rows=11 loops=1)
+  Buffers: shared hit=36
+  ->  Index Scan using playlist_items_pkey on playlist_items pi  (cost=0.29..18.91 rows=7 width=14) (actual time=0.008..0.010 rows=11 loops=1)
+        Index Cond: (playlist_id = 501)
+        Buffers: shared hit=3
+  ->  Index Scan using videos_pkey on videos v  (cost=0.29..8.30 rows=1 width=40) (actual time=0.006..0.006 rows=1 loops=11)
+        Index Cond: (video_id = pi.video_id)
+        Buffers: shared hit=33
+Planning:
+  Buffers: shared hit=310
+Planning Time: 0.498 ms
+Execution Time: 0.123 ms
