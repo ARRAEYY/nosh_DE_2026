@@ -1,11 +1,35 @@
-# benchmarks/results/large/ - placeholder (CP4 DE)
+# benchmarks/results/large/ - CP4 large-data results (DE)
 
 **Owner of this commit:** Adil Reyaz (ARRAEY)
 
-**Status:** The `large_data.zip` dataset is released by faculty on **Thu 19 Nov 2026**.
-Until then this folder contains only this README. The actual `summary.csv` and raw
-plan files will be generated on the benchmark laptop and committed here as soon as
-the large dataset is available - well before the Mon 23 Nov CP4 deadline.
+**Status: COMPLETE - measured Sun 22 Nov 2026.** The faculty `large_data.zip`
+(247,002,767 bytes, 12,828,190 data rows; SHA-256 below) was loaded into a fresh
+`youtube_large` database on PostgreSQL 16.2 exactly per the runbook below, and the
+optimized workload was benchmarked with 3 runs of `EXPLAIN (ANALYZE, BUFFERS)` -
+producing the `summary.csv` and 30 raw plan files in this folder. All 30 queries met
+their per-group targets (tightest margin: R04, 236.653 ms of 250 ms). The filled-in
+analysis is `docs/05_scalability_report.md`. The zip was available on the project
+tracker before the professor's class-wide announcement email (Mon 23 Nov), which is
+how the run happened Sunday evening.
+
+## Provenance - what was measured, on which data
+
+| Table | Rows in `large_data.zip` | Rows in `youtube_large` | Match |
+|---|---:|---:|---|
+| users | 600,000 | 600,000 | yes |
+| channels | 60,000 | 60,000 | yes |
+| videos | 600,000 | 600,000 | yes |
+| subscriptions | 2,598,598 | 2,598,598 | yes |
+| watch_events | 4,000,000 | 4,000,000 | yes |
+| video_reactions | 1,350,452 | 1,350,452 | yes |
+| comments | 1,200,000 | 1,200,000 | yes |
+| playlists | 160,000 | 160,000 | yes |
+| playlist_items | 1,120,003 | 1,120,003 | yes |
+| ad_impressions | 1,139,137 | 1,139,137 | yes |
+| **Total** | **12,828,190** | **12,828,190** | **yes** |
+
+SHA-256 of the zip this run used:
+`99c96c0cc4f9227bb889bb637320dd2b51b4b1f0fb9fefec7e67706ceb123671`
 
 ## How the large-data benchmark is produced (runbook for Adil)
 
@@ -13,7 +37,7 @@ the large dataset is available - well before the Mon 23 Nov CP4 deadline.
 # 0. on the benchmark laptop (same one used for CP2 and CP3):
 cd nosh_DE_2026
 
-# 1. unzip the large dataset (released Thu 19 Nov) into large_data/ next to README.md
+# 1. unzip the large dataset into large_data/ next to README.md
 unzip large_data.zip -d large_data/
 #    -> 10 CSV files, ~20x the seed rows:
 #      users ~600,000, channels ~60,000, videos ~600,000, subscriptions ~2,585,000

@@ -12,7 +12,7 @@
 | Member 3 | Renuka Yadav | 2501010373 | Renuka11aug |
 | Member 4 | Shubham | 2501010672 | ShubhamManglaw |
 
-**Team No.:** _fill_ · **Section:** _fill_ · **Repository URL:** https://github.com/ARRAEYY/nosh_DE_2026
+**Team No.:** T0026 · **Section:** _fill_ · **Repository URL:** https://github.com/ARRAEYY/nosh_DE_2026
 
 ## Headline numbers
 
@@ -20,7 +20,7 @@
 | --- | ---: | --- |
 | CP2 - Baseline | **30,987.864 ms** | Schema only (PK/UNIQUE/CHECK), no tuning indexes. R19 alone is ~30.5 s. |
 | CP3 - Optimized | **421.867 ms** | 17 tuning indexes + 5 query rewrites. **73x faster.** |
-| CP4 - Large data (seed) | _fill after Thu 19 Nov `large_data.zip` release_ | Optimized workload on the 20x dataset. |
+| CP4 - Large data (20x) | **7,783.423 ms** | Optimized workload on the official 20x dataset (12,828,190 rows, 3 runs, avg). All 30 queries inside their per-group targets; slowest was R25 at 1,588.547 ms of 5,000. 18.45x the CP3 total. |
 
 R19 (the intentionally slow partner report) went from 30,450 ms to 96 ms, a 315 times improvement. The fix was rewriting two correlated subqueries into a `CROSS JOIN LATERAL`, so each channel's numbers come from an index lookup instead of a full table scan.
 

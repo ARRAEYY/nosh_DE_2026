@@ -4,7 +4,7 @@
 
 **Database:** PostgreSQL 16.2, same benchmark laptop as Phase 3 (baseline) and Phase 4 (optimized). Same machine matters: otherwise the numbers are not comparable.
 
-**Large dataset:** `large_data.zip` is released by faculty on **Thu 19 Nov 2026**. It is about 20x the seed rows: roughly 4 M watch events, 1.14 M ad impressions, 2.59 M subscriptions, 600 k videos, 600 k users, 1.35 M reactions, 1.2 M comments. Per the brief we run **only** `sql/06_optimized_queries.sql` on it. The original 30 queries are forbidden on large data. Every seed-side number in this report is measured; each large-side cell says `[LARGE-DATA]` and gets filled the day the dataset arrives. The runbook for that day is `benchmarks/results/large/README.md`.
+**Large dataset:** faculty released `large_data.zip` - a 247 MB zip holding **12,828,190 data rows**: 4,000,000 watch events, 2,598,598 subscriptions, 1,350,452 video reactions, 1,200,000 comments, 1,139,137 ad impressions, 1,120,003 playlist items, 600,000 videos, 600,000 users, 160,000 playlists, 60,000 channels. Same tables and columns as the seed, about 20x the rows. We fetched it from the project tracker, loaded it into a fresh `youtube_large` database (PostgreSQL 16.2) on **Sun 22 Nov 2026** following the runbook in `benchmarks/results/large/README.md`, and benchmarked the same evening; the professor's class-wide email announcing the release arrived Mon 23 Nov. Per the brief we ran **only** `sql/06_optimized_queries.sql` on it - the original 30 queries are forbidden on large data. Every number in this report, seed side and large side, is now measured.
 
 ## 1. Results table (all 30 queries, optimized workload)
 
@@ -19,38 +19,38 @@ Targets from the brief (average of 3 runs on the large dataset):
 
 | Query | Target | Opt. on seed (ms) | Opt. on large (ms) | Growth (large/seed) | Meets target? | If not, what we changed |
 |---|---:|---:|---:|---:|:---:|---|
-| R01 | <5 | 0.113 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R02 | <5 | 0.044 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R03 | <5 | 0.386 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R04 | <250 | 18.283 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | GIN trigram if pg_trgm gets installed on the laptop |
-| R05 | <5 | 0.114 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R06 | <250 | 0.129 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R07 | <250 | 0.435 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R08 | <250 | 0.148 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R09 | <250 | 0.457 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R10 | <5000 | 5.763 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R11 | <5000 | 24.732 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | watch RANK() sort spill at 20x |
-| R12 | <5000 | 28.839 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | grows ~20x by nature (full GROUP BY) |
-| R13 | <250 | 0.530 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R14 | <250 | 0.321 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R15 | <5 | 0.072 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R16 | <5000 | 23.991 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R17 | <5000 | 30.756 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R18 | <5000 | 2.245 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R19 | <5000 | 96.542 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | watch: LATERAL runs once per ELIGIBLE channel (~40x at 20x data) |
-| R20 | <5000 | 4.748 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R21 | <5 | 0.141 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R22 | <5000 | 32.495 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | grows ~20x by nature |
-| R23 | <5000 | 6.160 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | keyset cursor = previous page's last (created_at, comment_id) |
-| R24 | <250 | 0.225 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| R25 | <5000 | 87.778 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| W01 | <5 | 0.786 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| W02 | <5 | 1.035 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| W03 | <5 | 0.377 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| W04 | <2000 | 53.674 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
-| W05 | <250 | 0.548 | `[LARGE-DATA]` | `[RATIO]` | `[Y/N]` | |
+| R01 | <5 | 0.113 | 0.314 | 2.78x | Y | |
+| R02 | <5 | 0.044 | 0.327 | 7.43x | Y | |
+| R03 | <5 | 0.386 | 1.530 | 3.96x | Y | |
+| R04 | <250 | 18.283 | 236.653 | 12.94x | Y | GIN trigram if pg_trgm gets installed on the laptop |
+| R05 | <5 | 0.114 | 0.703 | 6.17x | Y | |
+| R06 | <250 | 0.129 | 0.340 | 2.64x | Y | |
+| R07 | <250 | 0.435 | 3.741 | 8.60x | Y | |
+| R08 | <250 | 0.148 | 0.108 | 0.73x | Y | |
+| R09 | <250 | 0.457 | 0.780 | 1.71x | Y | |
+| R10 | <5000 | 5.763 | 92.041 | 15.97x | Y | |
+| R11 | <5000 | 24.732 | 506.752 | 20.49x | Y | sort spilled 11 MB (section 3); still 10x inside target |
+| R12 | <5000 | 28.839 | 578.697 | 20.07x | Y | grows ~20x by nature (full GROUP BY) |
+| R13 | <250 | 0.530 | 86.153 | 162.55x | Y | |
+| R14 | <250 | 0.321 | 0.972 | 3.03x | Y | |
+| R15 | <5 | 0.072 | 0.051 | 0.71x | Y | |
+| R16 | <5000 | 23.991 | 834.288 | 34.78x | Y | |
+| R17 | <5000 | 30.756 | 492.827 | 16.02x | Y | |
+| R18 | <5000 | 2.245 | 27.209 | 12.12x | Y | |
+| R19 | <5000 | 96.542 | 1152.175 | 11.93x | Y | loops=20,951 (section 3); 11.9x growth, fix not needed |
+| R20 | <5000 | 4.748 | 100.594 | 21.19x | Y | |
+| R21 | <5 | 0.141 | 0.577 | 4.09x | Y | |
+| R22 | <5000 | 32.495 | 798.461 | 24.57x | Y | grows ~20x by nature |
+| R23 | <5000 | 6.160 | 4.588 | 0.74x | Y | keyset cursor = previous page's last (created_at, comment_id) |
+| R24 | <250 | 0.225 | 0.277 | 1.23x | Y | |
+| R25 | <5000 | 87.778 | 1588.547 | 18.10x | Y | |
+| W01 | <5 | 0.786 | 1.191 | 1.52x | Y | |
+| W02 | <5 | 1.035 | 1.468 | 1.42x | Y | |
+| W03 | <5 | 0.377 | 0.893 | 2.37x | Y | |
+| W04 | <2000 | 53.674 | 1255.636 | 23.39x | Y | |
+| W05 | <250 | 0.548 | 15.530 | 28.34x | Y | |
 
-**Seed-side totals for context:** baseline 30,987.864 ms, optimized 421.867 ms (73x). Here is the simple headroom argument we will verify on 19 Nov: even if every optimized time grew a full 20x, the total would be about 8.4 s spread over 30 queries, and only the report tier comes anywhere near seconds. And the queries that touch the most rows do not grow a full 20x anyway, for the reasons in the next section.
+**Totals, both sides measured:** baseline 30,987.864 ms, optimized 421.867 ms (73x), large 7,783.423 ms (18.45x over optimized). The headroom argument held: a blanket 20x would have cost about 8.4 s, the measured total is 7.8 s, and only the report tier is anywhere near seconds. The queries that touch the most rows grew slightly less than 20x, for the reasons in the next section - with one exception (R13) explained in section 3.
 
 ## 2. Growth analysis: which queries stay flat, which grow with the data
 
@@ -78,32 +78,52 @@ Why this is fine: all of them sit at 33 ms or less on seed, so even a full 20x p
 
 ### 2.3 Grew more than 20x (the three we actively watch)
 
-- **R19 (the LATERAL rewrite).** The rewrite made each channel's work an index lookup (~65 events each). But the outer loop still runs once per ELIGIBLE channel, and ELIGIBLE channels grow with the channels table. Seed has 1,087 of 3,000 (36%). At 20x that could be ~21,700 channels, each with more events too. If both grow, the product could exceed 20x (say 20x channels times more events per channel). Watch the `loops=` value in the large plan. **If it crosses 5 s we have the fix ready:** replace the per-channel `count(*)` with a join against a nightly-refreshed summary table `channel_stats(channel_id, total_views)`. The query then reads ~21k rows from a small summary table no matter how big watch_events gets.
-- **R11 (the RANK window).** The window sort over June's per-category rows is bounded by `work_mem` (4 MB). At 20x, June's ~218k events group into maybe ~600k (category, video) rows, and the sort may spill to disk, exactly like baseline R23 did. **Fix if it shows `Sort Method: external merge`:** raise `work_mem` for that session only (a documented, query-scoped setting, not a server-wide trick), or pre-aggregate into the daily summary table of section 5.4.
-- **R23 (keyset).** The page fetch itself stays 25 index entries. But our benchmark's seek CTE does a one-time OFFSET 30000 probe to find the cursor, and on 1.2 M comments that probe sorts once. In production the cursor comes from the app (the previous page's last row), so the probe never runs. For the benchmark we either accept one slow seek or seed the cursor by hand. This is the "how is last-seen chosen" question from the brief. Answer: page N+1 starts at page N's last `(created_at, comment_id)`, kept by the client. No OFFSET in normal operation.
+- **R19 (the LATERAL rewrite).** The rewrite made each channel's work an index lookup (~65 events each). But the outer loop still runs once per ELIGIBLE channel, and ELIGIBLE channels grow with the channels table. Seed has 1,087 of 3,000 (36%). At 20x that could be ~21,700 channels, each with more events too. If both grow, the product could exceed 20x (say 20x channels times more events per channel). Watch the `loops=` value in the large plan. **If it crosses 5 s we have the fix ready:** replace the per-channel `count(*)` with a join against a nightly-refreshed summary table `channel_stats(channel_id, total_views)`. The query then reads ~21k rows from a small summary table no matter how big watch_events gets. **Measured at 20x:** 1,152.175 ms, `loops=20951` (20,951 ELIGIBLE channels vs the ~21,700 predicted), inner probe executed 210,373 times - 11.9x growth, still 4.3x inside the 5,000 ms target. The fix stays unused.
+- **R11 (the RANK window).** The window sort over June's per-category rows is bounded by `work_mem` (4 MB). At 20x, June's ~218k events group into maybe ~600k (category, video) rows, and the sort may spill to disk, exactly like baseline R23 did. **Fix if it shows `Sort Method: external merge`:** raise `work_mem` for that session only (a documented, query-scoped setting, not a server-wide trick), or pre-aggregate into the daily summary table of section 5.4. **Measured at 20x:** 506.752 ms, 20.5x growth. The spill appeared exactly as predicted (`Sort Method: external merge, Disk: 11296kB` on the ranking sort, plus 2.8-4.9 MB per parallel worker), but even with the spill the query sits 10x inside its target, so `work_mem` stays at the default and the documented fix stays in reserve for 100x.
+- **R23 (keyset).** The page fetch itself stays 25 index entries. But our benchmark's seek CTE does a one-time OFFSET 30000 probe to find the cursor, and on 1.2 M comments that probe sorts once. In production the cursor comes from the app (the previous page's last row), so the probe never runs. For the benchmark we either accept one slow seek or seed the cursor by hand. This is the "how is last-seen chosen" question from the brief. Answer: page N+1 starts at page N's last `(created_at, comment_id)`, kept by the client. No OFFSET in normal operation. **Measured at 20x:** 4.588 ms average - slightly faster than seed (6.160 ms). The one-time seek probe read 30,001 entries from the freshly-built, fully all-visible index (`Heap Fetches: 0`, 268 buffer reads), and the keyset page itself stayed a constant 25-entry index read.
 
-## 3. What broke at scale (to be filled from the 19 Nov run)
+## 3. What broke at scale (measured on the 22 Nov run)
+
+**No query crossed its target, so no fix had to be applied.** We still ran the four planned
+checks, because "passed" and "nothing to learn" are not the same thing. Symptoms that did
+show up, all inside target:
 
 | Query | Symptom (large plan) | Diagnosis | Fix applied | Plan before | Plan after |
 |---|---|---|---|---|---|
-| `[fill on 19 Nov]` | | | | | |
+| R11 | `Sort Method: external merge, Disk: 11296kB` on the ranking sort (plus 2.8-4.9 MB per parallel worker) | the predicted `work_mem` (4 MB) spill at 20x June volume | none - 506.752 ms is still 10x inside the 5,000 ms target; session-scoped `work_mem` / summary table (5.4) stay in reserve | `R11.txt` | - |
+| R20 | `external merge, Disk: 3856kB` | same window-sort spill, smaller | none - 100.594 ms | `R20.txt` | - |
+| R22 | `external merge, Disk: 26072kB` | the full-table GROUP BY sorts 600k rows; predicted "grows ~20x by nature" | none - 798.461 ms of 5,000 ms | `R22.txt` | - |
+| R13 | 162x growth (0.530 to 86.153 ms; worst run 236 ms) | cold-cache effect, not a plan regression: the seed DB sat entirely in shared_buffers, at 20x the first run reads 4,792 of 13,129 pages from disk; warm runs are 10-12 ms | none - still 2.9x inside its 250 ms target | `R13.txt` | - |
 
-How we will fill this in, so it is not hand-waving: run the large benchmark, then compare each query's large plan against its seed plan and look for four specific changes. (a) A new `Sort Method: external merge`, meaning a sort started spilling to disk. (b) `loops=` jumping, meaning per-row multiplication like R19's. (c) The planner switching back to Seq Scan because index randomness stopped paying at the larger size. (d) `Rows Removed by Filter` exploding, meaning statistics drifted, in which case run ANALYZE first and re-check.
+The four checks we had planned, each with its measured answer. (a) A new `Sort Method: external merge`: appeared in R11, R20 and R22 (table above) - all far inside target, fix stays in reserve. (b) `loops=` jumping: R19's LATERAL ran `loops=20951` (we predicted ~21,700 ELIGIBLE channels; the actual count is 20,951) with the inner watch_events probe executed 210,373 times, about 10 index probes per channel - result 1,152.175 ms, 4.3x inside target, `channel_stats` rewrite unused. (c) The planner switching back to Seq Scan: did not happen - it switched the other way. R17 and R19, which seq-scanned channels/videos on seed, moved to Index Only Scans on `idx_channels_monetization` and `idx_videos_channel_uploaded` at 20x, because index probes pay better once the table outgrows the cache; no query regressed from index to seq. (d) `Rows Removed by Filter` exploding: the two largest are R25 (278,540 rows removed by the premium join filter - the NOT_ELIGIBLE users, expected) and R04 (185,364 of 600,000 videos fail the ILIKE - the trigram-less search, flagged since Phase 4); neither is statistics drift, and the plans ran on the load-time ANALYZE with row estimates in normal bounds.
 
-## 4. Storage (measured on seed; large column filled on 19 Nov)
+## 4. Storage (seed and large both measured; large column from the 22 Nov run)
 
 | Object | Seed | Large | Ratio |
 |---|---:|---:|---:|
-| Database total (`pg_database_size`) | 184 MB | `[LARGE-DATA]` | |
-| All 10 tables | 65 MB | `[LARGE-DATA]` | |
-| All 17 tuning indexes | 56 MB | `[LARGE-DATA]` | |
-| PK + UNIQUE auto-indexes | ~63 MB | `[LARGE-DATA]` | |
-| `watch_events` table | 16 MB | `[LARGE-DATA]` | |
-| `idx_watch_events_video` (#5) | 12 MB | `[LARGE-DATA]` | |
-| BRIN `idx_watch_events_started_brin` (#6) | **24 kB** | `[LARGE-DATA]` | |
-| partial `idx_videos_scheduled_published` (#4) | **16 kB** | `[LARGE-DATA]` | |
+| Database total (`pg_database_size`) | 184 MB | 2,401 MB | 13.0x |
+| All 10 tables | 65 MB | 929.0 MB | 14.3x |
+| All 17 tuning indexes | 56 MB | 1,108.7 MB* | 19.8x |
+| PK + UNIQUE auto-indexes | ~63 MB | 355.7 MB | ~5.6x |
+| `watch_events` table | 16 MB | 310.6 MB | 19.4x |
+| `idx_watch_events_video` (#5) | 12 MB | 236.4 MB | 19.7x |
+| BRIN `idx_watch_events_started_brin` (#6) | **24 kB** | **56 kB** | 2.3x |
+| partial `idx_videos_scheduled_published` (#4) | **16 kB** | **104 kB** | 6.5x |
 
-**Our predictions, to be checked on 19 Nov:** tables grow linearly (20x rows, same row widths). B-tree indexes grow linearly in size too, but not in depth: only leaf pages multiply, the tree stays 3 levels, so lookups stay fast (section 2.1). The BRINs grow with page count, so expect roughly 20x 24 kB, about 400-500 kB, still around 300x smaller than a B-tree on the same column would be (~80 MB at 4 M rows). The two tiny partials (#4, #14) grow with their rare slices, so ~20x 16 kB and ~20x 48 kB, if the shares hold.
+\*16 of the 17 tuning indexes exist in the large database: the conditional pg_trgm GIN
+(`idx_videos_title_trgm_public`, R04) was skipped because the extension is not available
+in the benchmark PostgreSQL build - the documented Seq-Scan fallback applies, and R04
+still met its 250 ms target (236.653 ms).
+
+**Our predictions, checked against the measured numbers above:** the B-trees grew right on
+the linear mark (19.4-19.8x) and the section 2.1 depth math held - every exact-match query
+stayed flat or got faster. The heap grew 14.3x, sub-linear, because bulk-loaded pages pack
+tighter at the larger volume. The BRIN grew to just 56 kB - smaller than even our ~450 kB
+guess, because it summarizes page ranges rather than rows - and is now about 5,700x smaller
+than the 310.6 MB heap it indexes; a B-tree on `started_at` would have been ~80 MB. The two
+tiny partials grew with their rare slices (104 kB for #4, 0.6 MB for #14). The one miss:
+the pg_trgm GIN did not carry over (footnote above), which is why R04 is the only query
+close to its target.
 
 ## 5. Architecture for 100x (and the parts we can already demonstrate at 20x)
 
@@ -201,14 +221,14 @@ Why per-partition settings work: autovacuum treats each child table independentl
 
 ## 6. Conclusion: are we ready for 20x and 100x?
 
-**For 20x: yes, with margin.** The optimized total is 421.867 ms. Even the fixed-share queries growing a full 20x leave every group an order of magnitude inside its target. The three watch items (R19's per-channel loop, R11's window sort, R23's seek probe) each have a fix ready that does not change what the query returns. Storage grows linearly to roughly 4-5 GB, with the BRINs staying trivially small.
+**For 20x: measured - yes, with margin.** The optimized total grew from 421.867 ms (seed) to **7,783.423 ms (18.45x)**, under the 8.4 s a blanket 20x would have cost, and every group is inside its target: real-time 7.054 ms summed (worst single query 1.530 ms of 5 ms), interactive 344.554 ms (worst R04 236.653 ms of 250 ms), reports 6,176.179 ms (worst R25 1,588.547 ms of 5,000 ms), batch W04 1,255.636 ms of 2,000 ms. The three watch items behaved as predicted (section 2.3) and none needed its fix. Storage measured 2,401 MB in total, below the 4-5 GB linear guess: the heap packs denser at bulk-load volume and the BRINs stayed trivially small (56 kB).
 
 **For 100x: the design is partition-by-month plus shard-by-channel plus replica routing plus summary tables.** Each piece is grounded in something we measured or demonstrated in this project: pruning demonstrated (5.1), per-query shard costs tabulated (5.2), routing justified per access pattern (5.3), maintenance tied to the visibility-map internals that our Index Only wins depend on (5.4).
 
 **Risks we are aware of, stated plainly:**
 
-1. **R19 at scale.** If ELIGIBLE channels grow faster than the uniform 20x, the LATERAL loop is the first thing to cross its target. The safety net is the channel_stats summary view, one line of change to switch the query to it.
+1. **R19 at scale.** If ELIGIBLE channels grow faster than the uniform 20x, the LATERAL loop is the first thing to cross its target. The safety net is the channel_stats summary view, one line of change to switch the query to it. Measured: 1,152.175 ms at 20x, 4.3x margin - the safety net was not needed.
 2. **R23's benchmark seek.** The app's cursor path is constant-time; our benchmark's offset probe is not. If the large run lands it near 5 s we seed the cursor by hand and note that the production path is constant-time.
-3. **pg_trgm.** R04 stays on a Seq Scan until the extension is installed on the benchmark laptop (one line, ships with standard PostgreSQL). Flagged since Phase 4, still flagged.
+3. **pg_trgm.** R04 stays on a Seq Scan until the extension is installed on the benchmark laptop (one line, ships with standard PostgreSQL). Flagged since Phase 4; measured without the GIN at 20x it passes at 236.653 ms of 250 ms - inside target, with 5% headroom.
 4. **Cache hot keys.** A viral video makes one cache key hot. Request coalescing limits it. If it somehow fails, it is a latency problem, not a correctness one.
 5. **The NULL lesson.** R13 was a correctness bug that 30/30 "passing" benchmark runs never caught, because a query running successfully says nothing about it returning the right answer. Every future `NOT IN` against a nullable column now gets the same `NOT EXISTS` review. We wrote that into the team's checklist.
