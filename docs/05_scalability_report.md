@@ -4,7 +4,7 @@
 
 **Database:** PostgreSQL 16.2, same benchmark laptop as Phase 3 (baseline) and Phase 4 (optimized). Same machine matters: otherwise the numbers are not comparable.
 
-**Large dataset:** faculty released `large_data.zip` - a 247 MB zip holding **12,828,190 data rows**: 4,000,000 watch events, 2,598,598 subscriptions, 1,350,452 video reactions, 1,200,000 comments, 1,139,137 ad impressions, 1,120,003 playlist items, 600,000 videos, 600,000 users, 160,000 playlists, 60,000 channels. Same tables and columns as the seed, about 20x the rows. We fetched it from the project tracker, loaded it into a fresh `youtube_large` database (PostgreSQL 16.2) on **Sun 22 Nov 2026** following the runbook in `benchmarks/results/large/README.md`, and benchmarked the same evening; the professor's class-wide email announcing the release arrived Mon 23 Nov. Per the brief we ran **only** `sql/06_optimized_queries.sql` on it - the original 30 queries are forbidden on large data. Every number in this report, seed side and large side, is now measured.
+**Large dataset:** faculty released `large_data.zip` - a 247 MB zip holding **12,828,190 data rows**: 4,000,000 watch events, 2,598,598 subscriptions, 1,350,452 video reactions, 1,200,000 comments, 1,139,137 ad impressions, 1,120,003 playlist items, 600,000 videos, 600,000 users, 160,000 playlists, 60,000 channels. Same tables and columns as the seed, about 20x the rows. We fetched it from the project tracker, loaded it into a fresh `youtube_large` database (PostgreSQL 16.2) on **Sun 22 Nov 2026** following the runbook in `benchmarks/results/large/README.md`, and benchmarked the same evening; the professor's class-wide email announcing the release arrived Mon 23 Nov. The same morning we closed the one gap the 22 Nov run left open: the bundled benchmark PostgreSQL ships without contrib extensions, so pg_trgm was missing, index #2 was skipped, and R04 ran its documented Seq-Scan fallback; we compiled the extension in, built the GIN, and re-measured R04 (section 3). Per the brief we ran **only** `sql/06_optimized_queries.sql` on it - the original 30 queries are forbidden on large data. Every number in this report, seed side and large side, is now measured.
 
 ## 1. Results table (all 30 queries, optimized workload)
 
@@ -22,7 +22,7 @@ Targets from the brief (average of 3 runs on the large dataset):
 | R01 | <5 | 0.113 | 0.314 | 2.78x | Y | |
 | R02 | <5 | 0.044 | 0.327 | 7.43x | Y | |
 | R03 | <5 | 0.386 | 1.530 | 3.96x | Y | |
-| R04 | <250 | 18.283 | 236.653 | 12.94x | Y | GIN trigram if pg_trgm gets installed on the laptop |
+| R04 | <250 | 18.283 | 61.229 | 3.35x | Y | pg_trgm compiled in on 23 Nov, index #2 built, re-measured 3.9x faster (section 3) |
 | R05 | <5 | 0.114 | 0.703 | 6.17x | Y | |
 | R06 | <250 | 0.129 | 0.340 | 2.64x | Y | |
 | R07 | <250 | 0.435 | 3.741 | 8.60x | Y | |
@@ -50,7 +50,7 @@ Targets from the brief (average of 3 runs on the large dataset):
 | W04 | <2000 | 53.674 | 1255.636 | 23.39x | Y | |
 | W05 | <250 | 0.548 | 15.530 | 28.34x | Y | |
 
-**Totals, both sides measured:** baseline 30,987.864 ms, optimized 421.867 ms (73x), large 7,783.423 ms (18.45x over optimized). The headroom argument held: a blanket 20x would have cost about 8.4 s, the measured total is 7.8 s, and only the report tier is anywhere near seconds. The queries that touch the most rows grew slightly less than 20x, for the reasons in the next section - with one exception (R13) explained in section 3.
+**Totals, both sides measured:** baseline 30,987.864 ms, optimized 421.867 ms (73x), large 7,607.999 ms (18.03x over optimized, including the 23 Nov R04 re-measurement). The headroom argument held: a blanket 20x would have cost about 8.4 s, the measured total is 7.6 s, and only the report tier is anywhere near seconds. The queries that touch the most rows grew slightly less than 20x, for the reasons in the next section - with two exceptions explained in section 3: R13, and R04, whose growth is small precisely because its GIN index arrived with the fix.
 
 ## 2. Growth analysis: which queries stay flat, which grow with the data
 
@@ -84,18 +84,20 @@ Why this is fine: all of them sit at 33 ms or less on seed, so even a full 20x p
 
 ## 3. What broke at scale (measured on the 22 Nov run)
 
-**No query crossed its target, so no fix had to be applied.** We still ran the four planned
-checks, because "passed" and "nothing to learn" are not the same thing. Symptoms that did
-show up, all inside target:
+**No query crossed its target, so no fix was forced by the numbers.** One fix was applied
+anyway - to R04, the query we had flagged longest - and the four planned checks still ran,
+because "passed" and "nothing to learn" are not the same thing. Symptoms that did show up,
+all inside target:
 
 | Query | Symptom (large plan) | Diagnosis | Fix applied | Plan before | Plan after |
 |---|---|---|---|---|---|
+| R04 | Parallel Seq Scan, avg 236.653 ms - inside target but with only 5% headroom; 185,364 rows removed per worker by the ILIKE+visibility filter | pg_trgm missing from the bundled benchmark PostgreSQL (it ships without contrib extensions), so the guarded CREATE in `sql/05_indexes.sql` skipped index #2 - flagged since Phase 4 | compiled pg_trgm 1.6 from the PostgreSQL 16.2 source into the bundled server (PGXS), built `idx_videos_title_trgm_public` (19.3 MB, partial on PUBLIC), re-ran R04 3x on 23 Nov | `R04.txt` at commit 47c4008 (Seq Scan) | `R04.txt` (Bitmap Heap + Bitmap Index Scan on the GIN), avg 61.229 ms |
 | R11 | `Sort Method: external merge, Disk: 11296kB` on the ranking sort (plus 2.8-4.9 MB per parallel worker) | the predicted `work_mem` (4 MB) spill at 20x June volume | none - 506.752 ms is still 10x inside the 5,000 ms target; session-scoped `work_mem` / summary table (5.4) stay in reserve | `R11.txt` | - |
 | R20 | `external merge, Disk: 3856kB` | same window-sort spill, smaller | none - 100.594 ms | `R20.txt` | - |
 | R22 | `external merge, Disk: 26072kB` | the full-table GROUP BY sorts 600k rows; predicted "grows ~20x by nature" | none - 798.461 ms of 5,000 ms | `R22.txt` | - |
 | R13 | 162x growth (0.530 to 86.153 ms; worst run 236 ms) | cold-cache effect, not a plan regression: the seed DB sat entirely in shared_buffers, at 20x the first run reads 4,792 of 13,129 pages from disk; warm runs are 10-12 ms | none - still 2.9x inside its 250 ms target | `R13.txt` | - |
 
-The four checks we had planned, each with its measured answer. (a) A new `Sort Method: external merge`: appeared in R11, R20 and R22 (table above) - all far inside target, fix stays in reserve. (b) `loops=` jumping: R19's LATERAL ran `loops=20951` (we predicted ~21,700 ELIGIBLE channels; the actual count is 20,951) with the inner watch_events probe executed 210,373 times, about 10 index probes per channel - result 1,152.175 ms, 4.3x inside target, `channel_stats` rewrite unused. (c) The planner switching back to Seq Scan: did not happen - it switched the other way. R17 and R19, which seq-scanned channels/videos on seed, moved to Index Only Scans on `idx_channels_monetization` and `idx_videos_channel_uploaded` at 20x, because index probes pay better once the table outgrows the cache; no query regressed from index to seq. (d) `Rows Removed by Filter` exploding: the two largest are R25 (278,540 rows removed by the premium join filter - the NOT_ELIGIBLE users, expected) and R04 (185,364 of 600,000 videos fail the ILIKE - the trigram-less search, flagged since Phase 4); neither is statistics drift, and the plans ran on the load-time ANALYZE with row estimates in normal bounds.
+The four checks we had planned, each with its measured answer. (a) A new `Sort Method: external merge`: appeared in R11, R20 and R22 (table above) - all far inside target, fix stays in reserve. (b) `loops=` jumping: R19's LATERAL ran `loops=20951` (we predicted ~21,700 ELIGIBLE channels; the actual count is 20,951) with the inner watch_events probe executed 210,373 times, about 10 index probes per channel - result 1,152.175 ms, 4.3x inside target, `channel_stats` rewrite unused. (c) The planner switching back to Seq Scan: did not happen - it switched the other way. R17 and R19, which seq-scanned channels/videos on seed, moved to Index Only Scans on `idx_channels_monetization` and `idx_videos_channel_uploaded` at 20x, because index probes pay better once the table outgrows the cache; no query regressed from index to seq. The 23 Nov pg_trgm fix added one more in that direction: R04 moved from Parallel Seq Scan to the GIN bitmap plan, 3.9x faster (61.229 vs 236.653 ms). (d) `Rows Removed by Filter` exploding: the two largest are R25 (278,540 rows removed by the premium join filter - the NOT_ELIGIBLE users, expected) and R04 (185,364 rows removed per worker - non-PUBLIC rows and non-matching titles - while the trigram extension was still missing; since fixed in the table above); neither is statistics drift, and the plans ran on the load-time ANALYZE with row estimates in normal bounds.
 
 ## 4. Storage (seed and large both measured; large column from the 22 Nov run)
 
@@ -103,17 +105,19 @@ The four checks we had planned, each with its measured answer. (a) A new `Sort M
 |---|---:|---:|---:|
 | Database total (`pg_database_size`) | 184 MB | 2,401 MB | 13.0x |
 | All 10 tables | 65 MB | 929.0 MB | 14.3x |
-| All 17 tuning indexes | 56 MB | 1,108.7 MB* | 19.8x |
+| All 17 tuning indexes | 56 MB | 1,128.0 MB* | 20.1x |
 | PK + UNIQUE auto-indexes | ~63 MB | 355.7 MB | ~5.6x |
 | `watch_events` table | 16 MB | 310.6 MB | 19.4x |
 | `idx_watch_events_video` (#5) | 12 MB | 236.4 MB | 19.7x |
 | BRIN `idx_watch_events_started_brin` (#6) | **24 kB** | **56 kB** | 2.3x |
 | partial `idx_videos_scheduled_published` (#4) | **16 kB** | **104 kB** | 6.5x |
 
-\*16 of the 17 tuning indexes exist in the large database: the conditional pg_trgm GIN
-(`idx_videos_title_trgm_public`, R04) was skipped because the extension is not available
-in the benchmark PostgreSQL build - the documented Seq-Scan fallback applies, and R04
-still met its 250 ms target (236.653 ms).
+\*All 17 tuning indexes now exist in the large database. The 22 Nov run measured 16 of 17
+(1,108.7 MB): the conditional pg_trgm GIN (`idx_videos_title_trgm_public`, R04) had
+been skipped because the bundled benchmark PostgreSQL ships without contrib extensions.
+On 23 Nov we compiled pg_trgm into the server and added the missing GIN - 19.3 MB over
+526,322 PUBLIC titles - bringing the tuning total to 1,128.0 MB; R04 was re-measured the
+same day (section 3).
 
 **Our predictions, checked against the measured numbers above:** the B-trees grew right on
 the linear mark (19.4-19.8x) and the section 2.1 depth math held - every exact-match query
@@ -121,9 +125,11 @@ stayed flat or got faster. The heap grew 14.3x, sub-linear, because bulk-loaded 
 tighter at the larger volume. The BRIN grew to just 56 kB - smaller than even our ~450 kB
 guess, because it summarizes page ranges rather than rows - and is now about 5,700x smaller
 than the 310.6 MB heap it indexes; a B-tree on `started_at` would have been ~80 MB. The two
-tiny partials grew with their rare slices (104 kB for #4, 0.6 MB for #14). The one miss:
-the pg_trgm GIN did not carry over (footnote above), which is why R04 is the only query
-close to its target.
+tiny partials grew with their rare slices (104 kB for #4, 0.6 MB for #14). The one late
+addition: the pg_trgm GIN joined the set on 23 Nov (footnote above), taking R04 from the
+tightest margin in the workload - 5% inside target on the Seq Scan - to 4x inside it,
+for 19.3 MB or 1.7% of the tuning-index budget. That is exactly the price/performance
+trade a trigram index is supposed to cost.
 
 ## 5. Architecture for 100x (and the parts we can already demonstrate at 20x)
 
@@ -221,7 +227,7 @@ Why per-partition settings work: autovacuum treats each child table independentl
 
 ## 6. Conclusion: are we ready for 20x and 100x?
 
-**For 20x: measured - yes, with margin.** The optimized total grew from 421.867 ms (seed) to **7,783.423 ms (18.45x)**, under the 8.4 s a blanket 20x would have cost, and every group is inside its target: real-time 7.054 ms summed (worst single query 1.530 ms of 5 ms), interactive 344.554 ms (worst R04 236.653 ms of 250 ms), reports 6,176.179 ms (worst R25 1,588.547 ms of 5,000 ms), batch W04 1,255.636 ms of 2,000 ms. The three watch items behaved as predicted (section 2.3) and none needed its fix. Storage measured 2,401 MB in total, below the 4-5 GB linear guess: the heap packs denser at bulk-load volume and the BRINs stayed trivially small (56 kB).
+**For 20x: measured - yes, with margin.** The optimized total grew from 421.867 ms (seed) to **7,607.999 ms (18.03x)**, under the 8.4 s a blanket 20x would have cost, and every group is inside its target: real-time 7.054 ms summed (worst single query 1.530 ms of 5 ms), interactive 169.130 ms (worst R13 86.153 ms of 250 ms), reports 6,176.179 ms (worst R25 1,588.547 ms of 5,000 ms), batch W04 1,255.636 ms of 2,000 ms. The three watch items behaved as predicted (section 2.3) and none needed its fix. Storage measured 2,401 MB in total, below the 4-5 GB linear guess: the heap packs denser at bulk-load volume and the BRINs stayed trivially small (56 kB).
 
 **For 100x: the design is partition-by-month plus shard-by-channel plus replica routing plus summary tables.** Each piece is grounded in something we measured or demonstrated in this project: pruning demonstrated (5.1), per-query shard costs tabulated (5.2), routing justified per access pattern (5.3), maintenance tied to the visibility-map internals that our Index Only wins depend on (5.4).
 
@@ -229,6 +235,6 @@ Why per-partition settings work: autovacuum treats each child table independentl
 
 1. **R19 at scale.** If ELIGIBLE channels grow faster than the uniform 20x, the LATERAL loop is the first thing to cross its target. The safety net is the channel_stats summary view, one line of change to switch the query to it. Measured: 1,152.175 ms at 20x, 4.3x margin - the safety net was not needed.
 2. **R23's benchmark seek.** The app's cursor path is constant-time; our benchmark's offset probe is not. If the large run lands it near 5 s we seed the cursor by hand and note that the production path is constant-time.
-3. **pg_trgm.** R04 stays on a Seq Scan until the extension is installed on the benchmark laptop (one line, ships with standard PostgreSQL). Flagged since Phase 4; measured without the GIN at 20x it passes at 236.653 ms of 250 ms - inside target, with 5% headroom.
+3. **pg_trgm - resolved 23 Nov.** Flagged since Phase 4, closed before submission: the extension was compiled into the bundled benchmark PostgreSQL, index #2 was built, and R04 re-measured at 61.229 ms - 3.9x faster than its Seq-Scan fallback and 4x inside the 250 ms target (section 3). The pattern is the part we keep for the viva: the index script degraded honestly (guarded DO block, documented fallback), and the fix was measured, not assumed.
 4. **Cache hot keys.** A viral video makes one cache key hot. Request coalescing limits it. If it somehow fails, it is a latency problem, not a correctness one.
 5. **The NULL lesson.** R13 was a correctness bug that 30/30 "passing" benchmark runs never caught, because a query running successfully says nothing about it returning the right answer. Every future `NOT IN` against a nullable column now gets the same `NOT EXISTS` review. We wrote that into the team's checklist.

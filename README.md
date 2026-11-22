@@ -20,7 +20,7 @@
 | --- | ---: | --- |
 | CP2 - Baseline | **30,987.864 ms** | Schema only (PK/UNIQUE/CHECK), no tuning indexes. R19 alone is ~30.5 s. |
 | CP3 - Optimized | **421.867 ms** | 17 tuning indexes + 5 query rewrites. **73x faster.** |
-| CP4 - Large data (20x) | **7,783.423 ms** | Optimized workload on the official 20x dataset (12,828,190 rows, 3 runs, avg). All 30 queries inside their per-group targets; slowest was R25 at 1,588.547 ms of 5,000. 18.45x the CP3 total. |
+| CP4 - Large data (20x) | **7,607.999 ms** | Optimized workload on the official 20x dataset (12,828,190 rows, 3 runs, avg). All 30 queries inside their per-group targets; slowest was R25 at 1,588.547 ms of 5,000. 18.03x the CP3 total. R04 re-measured on the pg_trgm GIN index on 23 Nov: 61.229 ms, 3.9x faster than its Seq-Scan fallback (scalability report section 3). |
 
 R19 (the intentionally slow partner report) went from 30,450 ms to 96 ms, a 315 times improvement. The fix was rewriting two correlated subqueries into a `CROSS JOIN LATERAL`, so each channel's numbers come from an index lookup instead of a full table scan.
 

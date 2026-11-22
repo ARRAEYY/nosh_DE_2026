@@ -53,6 +53,18 @@ psql -d youtube_large -f sql/02_load_data.sql
 psql -d youtube_large -f sql/05_indexes.sql
 #    loading may take several minutes; ANALYZE at the end
 
+# 2b. R04's trigram index (idx_videos_title_trgm_public) is only created when
+#     the pg_trgm extension is present (sql/05_indexes.sql guards it):
+#     - stock PostgreSQL: the extension ships with contrib, one line:
+#         psql -d youtube_large -c "CREATE EXTENSION pg_trgm;"
+#     - the bundled pgserver build (our benchmark laptop) ships WITHOUT contrib;
+#       we compiled it once from the PostgreSQL 16.2 source via PGXS:
+#         tar xzf postgresql-16.2.tar.gz && cd postgresql-16.2/contrib/pg_trgm
+#         make USE_PGXS=1 PG_CONFIG=<pginstall>/bin/pg_config install
+#     R04 was re-measured with the GIN on Mon 23 Nov 2026 (61.229 ms avg, see
+#     docs/05_scalability_report.md section 3); the original Seq-Scan plan from
+#     the 22 Nov run stays in git history at commit 47c4008.
+
 # 3. run the optimized workload ONLY (brief forbids the original 30 on large data)
 ./benchmarks/run_benchmark.sh youtube_large large 3 sql/06_optimized_queries.sql
 #    -> writes benchmarks/results/large/summary.csv + R01.txt ... W05.txt

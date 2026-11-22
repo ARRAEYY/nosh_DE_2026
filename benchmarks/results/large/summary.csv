@@ -2,7 +2,7 @@ query_id,type,avg_ms,median_ms,min_ms,max_ms,scan_nodes
 R01,READ,0.314,0.034,0.034,0.873,Index Only Scan using idx_videos_channel_published_public on videos
 R02,READ,0.327,0.056,0.044,0.881,Index Scan using videos_pkey on videos | Index Scan using channels_pkey on channels
 R03,READ,1.530,0.124,0.118,4.347,Index Only Scan using subscriptions_pkey on subscriptions | Index Scan using channels_pkey on channels | Index Only Scan using idx_videos_channel_published_public on videos
-R04,READ,236.653,235.194,220.670,254.095,Seq Scan on videos
+R04,READ,61.229,61.517,59.703,62.468,Bitmap Heap Scan on videos | Bitmap Index Scan on idx_videos_title_trgm_public
 R05,READ,0.703,0.069,0.063,1.978,Index Only Scan using idx_watch_events_user_started on watch_events | Index Scan using videos_pkey on videos
 R06,READ,0.340,0.090,0.081,0.850,Index Only Scan using idx_videos_scheduled_published on videos
 R07,READ,3.741,0.382,0.349,10.492,Index Only Scan using idx_videos_channel_uploaded on videos | Index Only Scan using idx_watch_events_video on watch_events
