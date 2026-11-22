@@ -1,0 +1,105 @@
+=== R25 run 1 ===
+Gather Merge  (cost=141725.15..178625.66 rows=316268 width=25) (actual time=1555.537..1588.685 rows=3320 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  Buffers: shared hit=2360 read=52560, temp read=25766 written=25928
+  ->  Sort  (cost=140725.13..141120.46 rows=158134 width=25) (actual time=1551.453..1551.540 rows=1107 loops=3)
+        Sort Key: a.shown_at DESC
+        Sort Method: quicksort  Memory: 72kB
+        Buffers: shared hit=2360 read=52560, temp read=25766 written=25928
+        Worker 0:  Sort Method: quicksort  Memory: 114kB
+        Worker 1:  Sort Method: quicksort  Memory: 117kB
+        ->  Parallel Hash Join  (cost=35048.04..123286.14 rows=158134 width=25) (actual time=1398.212..1551.134 rows=1107 loops=3)
+              Hash Cond: (w.user_id = u.user_id)
+              Join Filter: (u.premium_until >= (a.shown_at)::date)
+              Rows Removed by Join Filter: 278540
+              Buffers: shared hit=2286 read=52560, temp read=25766 written=25928
+              ->  Parallel Hash Join  (cost=21838.04..102293.83 rows=474402 width=21) (actual time=766.552..1233.005 rows=379712 loops=3)
+                    Hash Cond: (w.watch_id = a.watch_id)
+                    Buffers: shared hit=2192 read=45952, temp read=19498 written=19640
+                    ->  Parallel Seq Scan on watch_events w  (cost=0.00..56426.99 rows=1666699 width=8) (actual time=0.030..278.419 rows=1333333 loops=3)
+                          Buffers: shared hit=2192 read=37568
+                    ->  Parallel Hash  (cost=13128.02..13128.02 rows=474402 width=21) (actual time=189.008..189.009 rows=379712 loops=3)
+                          Buckets: 131072  Batches: 16  Memory Usage: 5536kB
+                          Buffers: shared read=8384, temp written=6348
+                          ->  Parallel Seq Scan on ad_impressions a  (cost=0.00..13128.02 rows=474402 width=21) (actual time=0.022..84.460 rows=379712 loops=3)
+                                Buffers: shared read=8384
+              ->  Parallel Hash  (cost=9108.00..9108.00 rows=250000 width=8) (actual time=71.043..71.044 rows=200000 loops=3)
+                    Buckets: 262144  Batches: 4  Memory Usage: 7968kB
+                    Buffers: shared read=6608, temp written=1348
+                    ->  Parallel Seq Scan on users u  (cost=0.00..9108.00 rows=250000 width=8) (actual time=0.020..30.552 rows=200000 loops=3)
+                          Buffers: shared read=6608
+Planning:
+  Buffers: shared hit=445 read=29
+Planning Time: 1.351 ms
+Execution Time: 1588.915 ms
+=== R25 run 2 ===
+Gather Merge  (cost=141725.15..178625.66 rows=316268 width=25) (actual time=1549.143..1580.002 rows=3320 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  Buffers: shared hit=2648 read=52272, temp read=25765 written=25940
+  ->  Sort  (cost=140725.13..141120.46 rows=158134 width=25) (actual time=1539.052..1539.151 rows=1107 loops=3)
+        Sort Key: a.shown_at DESC
+        Sort Method: quicksort  Memory: 65kB
+        Buffers: shared hit=2648 read=52272, temp read=25765 written=25940
+        Worker 0:  Sort Method: quicksort  Memory: 71kB
+        Worker 1:  Sort Method: quicksort  Memory: 143kB
+        ->  Parallel Hash Join  (cost=35048.04..123286.14 rows=158134 width=25) (actual time=1395.121..1538.719 rows=1107 loops=3)
+              Hash Cond: (w.user_id = u.user_id)
+              Join Filter: (u.premium_until >= (a.shown_at)::date)
+              Rows Removed by Join Filter: 278540
+              Buffers: shared hit=2574 read=52272, temp read=25765 written=25940
+              ->  Parallel Hash Join  (cost=21838.04..102293.83 rows=474402 width=21) (actual time=724.140..1179.924 rows=379712 loops=3)
+                    Hash Cond: (w.watch_id = a.watch_id)
+                    Buffers: shared hit=2384 read=45760, temp read=19498 written=19636
+                    ->  Parallel Seq Scan on watch_events w  (cost=0.00..56426.99 rows=1666699 width=8) (actual time=0.043..281.852 rows=1333333 loops=3)
+                          Buffers: shared hit=2288 read=37472
+                    ->  Parallel Hash  (cost=13128.02..13128.02 rows=474402 width=21) (actual time=165.032..165.033 rows=379712 loops=3)
+                          Buckets: 131072  Batches: 16  Memory Usage: 5568kB
+                          Buffers: shared hit=96 read=8288, temp written=6364
+                          ->  Parallel Seq Scan on ad_impressions a  (cost=0.00..13128.02 rows=474402 width=21) (actual time=0.029..71.513 rows=379712 loops=3)
+                                Buffers: shared hit=96 read=8288
+              ->  Parallel Hash  (cost=9108.00..9108.00 rows=250000 width=8) (actual time=101.058..101.059 rows=200000 loops=3)
+                    Buckets: 262144  Batches: 4  Memory Usage: 7968kB
+                    Buffers: shared hit=96 read=6512, temp written=1360
+                    ->  Parallel Seq Scan on users u  (cost=0.00..9108.00 rows=250000 width=8) (actual time=0.044..26.274 rows=200000 loops=3)
+                          Buffers: shared hit=96 read=6512
+Planning:
+  Buffers: shared hit=474
+Planning Time: 0.895 ms
+Execution Time: 1580.207 ms
+=== R25 run 3 ===
+Gather Merge  (cost=141725.15..178625.66 rows=316268 width=25) (actual time=1561.858..1596.270 rows=3320 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  Buffers: shared hit=2936 read=51984, temp read=25772 written=25952
+  ->  Sort  (cost=140725.13..141120.46 rows=158134 width=25) (actual time=1558.722..1558.821 rows=1107 loops=3)
+        Sort Key: a.shown_at DESC
+        Sort Method: quicksort  Memory: 66kB
+        Buffers: shared hit=2936 read=51984, temp read=25772 written=25952
+        Worker 0:  Sort Method: quicksort  Memory: 120kB
+        Worker 1:  Sort Method: quicksort  Memory: 118kB
+        ->  Parallel Hash Join  (cost=35048.04..123286.14 rows=158134 width=25) (actual time=1414.447..1555.061 rows=1107 loops=3)
+              Hash Cond: (w.user_id = u.user_id)
+              Join Filter: (u.premium_until >= (a.shown_at)::date)
+              Rows Removed by Join Filter: 278540
+              Buffers: shared hit=2862 read=51984, temp read=25772 written=25952
+              ->  Parallel Hash Join  (cost=21838.04..102293.83 rows=474402 width=21) (actual time=745.970..1235.102 rows=379712 loops=3)
+                    Hash Cond: (w.watch_id = a.watch_id)
+                    Buffers: shared hit=2576 read=45568, temp read=19503 written=19644
+                    ->  Parallel Seq Scan on watch_events w  (cost=0.00..56426.99 rows=1666699 width=8) (actual time=0.042..249.952 rows=1333333 loops=3)
+                          Buffers: shared hit=2384 read=37376
+                    ->  Parallel Hash  (cost=13128.02..13128.02 rows=474402 width=21) (actual time=186.506..186.508 rows=379712 loops=3)
+                          Buckets: 131072  Batches: 16  Memory Usage: 5568kB
+                          Buffers: shared hit=192 read=8192, temp written=6344
+                          ->  Parallel Seq Scan on ad_impressions a  (cost=0.00..13128.02 rows=474402 width=21) (actual time=0.024..60.699 rows=379712 loops=3)
+                                Buffers: shared hit=192 read=8192
+              ->  Parallel Hash  (cost=9108.00..9108.00 rows=250000 width=8) (actual time=86.360..86.361 rows=200000 loops=3)
+                    Buckets: 262144  Batches: 4  Memory Usage: 7968kB
+                    Buffers: shared hit=192 read=6416, temp written=1356
+                    ->  Parallel Seq Scan on users u  (cost=0.00..9108.00 rows=250000 width=8) (actual time=0.043..43.564 rows=200000 loops=3)
+                          Buffers: shared hit=192 read=6416
+Planning:
+  Buffers: shared hit=474
+Planning Time: 0.961 ms
+Execution Time: 1596.520 ms

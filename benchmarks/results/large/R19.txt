@@ -1,0 +1,111 @@
+=== R19 run 1 ===
+Sort  (cost=1569516.08..1569568.48 rows=20958 width=36) (actual time=1166.066..1169.523 rows=20951 loops=1)
+  Sort Key: ($2) DESC
+  Sort Method: quicksort  Memory: 2081kB
+  Buffers: shared hit=1000876 read=73987
+  ->  Nested Loop  (cost=75.16..1568011.80 rows=20958 width=36) (actual time=5.272..1160.047 rows=20951 loops=1)
+        Buffers: shared hit=1000873 read=73987
+        ->  Index Only Scan using idx_channels_monetization on channels c  (cost=0.41..1026.47 rows=20958 width=20) (actual time=0.038..2.966 rows=20951 loops=1)
+              Index Cond: (monetization_status = 'ELIGIBLE'::text)
+              Heap Fetches: 0
+              Buffers: shared hit=1 read=152
+        ->  Result  (cost=74.75..74.76 rows=1 width=16) (actual time=0.055..0.055 rows=1 loops=20951)
+              Buffers: shared hit=1000872 read=73835
+              InitPlan 1 (returns $2)
+                ->  Aggregate  (cost=73.68..73.69 rows=1 width=8) (actual time=0.053..0.053 rows=1 loops=20951)
+                      Buffers: shared hit=941990 read=69861
+                      ->  Nested Loop  (cost=0.85..73.46 rows=87 width=0) (actual time=0.005..0.049 rows=67 loops=20951)
+                            Buffers: shared hit=941990 read=69861
+                            ->  Index Only Scan using idx_videos_channel_uploaded on videos v2  (cost=0.42..8.65 rows=13 width=12) (actual time=0.001..0.002 rows=10 loops=20951)
+                                  Index Cond: (channel_id = c.channel_id)
+                                  Heap Fetches: 20
+                                  Buffers: shared hit=62877 read=2015
+                            ->  Index Only Scan using idx_watch_events_video_user on watch_events w  (cost=0.43..4.90 rows=9 width=12) (actual time=0.003..0.004 rows=7 loops=210373)
+                                  Index Cond: (video_id = v2.video_id)
+                                  Heap Fetches: 0
+                                  Buffers: shared hit=879113 read=67846
+              InitPlan 2 (returns $3)
+                ->  Limit  (cost=0.42..1.06 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=20951)
+                      Buffers: shared hit=58882 read=3974
+                      ->  Index Only Scan using idx_videos_channel_uploaded on videos v  (cost=0.42..8.69 rows=13 width=8) (actual time=0.002..0.002 rows=1 loops=20951)
+                            Index Cond: ((channel_id = c.channel_id) AND (uploaded_at IS NOT NULL))
+                            Heap Fetches: 2
+                            Buffers: shared hit=58882 read=3974
+Planning:
+  Buffers: shared hit=540 read=21
+Planning Time: 1.097 ms
+Execution Time: 1170.450 ms
+=== R19 run 2 ===
+Sort  (cost=1569516.08..1569568.48 rows=20958 width=36) (actual time=1158.552..1161.912 rows=20951 loops=1)
+  Sort Key: ($2) DESC
+  Sort Method: quicksort  Memory: 2081kB
+  Buffers: shared hit=1012498 read=62365
+  ->  Nested Loop  (cost=75.16..1568011.80 rows=20958 width=36) (actual time=5.241..1152.305 rows=20951 loops=1)
+        Buffers: shared hit=1012495 read=62365
+        ->  Index Only Scan using idx_channels_monetization on channels c  (cost=0.41..1026.47 rows=20958 width=20) (actual time=0.047..3.105 rows=20951 loops=1)
+              Index Cond: (monetization_status = 'ELIGIBLE'::text)
+              Heap Fetches: 0
+              Buffers: shared hit=1 read=152
+        ->  Result  (cost=74.75..74.76 rows=1 width=16) (actual time=0.054..0.055 rows=1 loops=20951)
+              Buffers: shared hit=1012494 read=62213
+              InitPlan 1 (returns $2)
+                ->  Aggregate  (cost=73.68..73.69 rows=1 width=8) (actual time=0.052..0.052 rows=1 loops=20951)
+                      Buffers: shared hit=953634 read=58217
+                      ->  Nested Loop  (cost=0.85..73.46 rows=87 width=0) (actual time=0.005..0.049 rows=67 loops=20951)
+                            Buffers: shared hit=953634 read=58217
+                            ->  Index Only Scan using idx_videos_channel_uploaded on videos v2  (cost=0.42..8.65 rows=13 width=12) (actual time=0.001..0.002 rows=10 loops=20951)
+                                  Index Cond: (channel_id = c.channel_id)
+                                  Heap Fetches: 20
+                                  Buffers: shared hit=62874 read=2018
+                            ->  Index Only Scan using idx_watch_events_video_user on watch_events w  (cost=0.43..4.90 rows=9 width=12) (actual time=0.003..0.004 rows=7 loops=210373)
+                                  Index Cond: (video_id = v2.video_id)
+                                  Heap Fetches: 0
+                                  Buffers: shared hit=890760 read=56199
+              InitPlan 2 (returns $3)
+                ->  Limit  (cost=0.42..1.06 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=20951)
+                      Buffers: shared hit=58860 read=3996
+                      ->  Index Only Scan using idx_videos_channel_uploaded on videos v  (cost=0.42..8.69 rows=13 width=8) (actual time=0.002..0.002 rows=1 loops=20951)
+                            Index Cond: ((channel_id = c.channel_id) AND (uploaded_at IS NOT NULL))
+                            Heap Fetches: 2
+                            Buffers: shared hit=58860 read=3996
+Planning:
+  Buffers: shared hit=508 read=53
+Planning Time: 1.396 ms
+Execution Time: 1162.811 ms
+=== R19 run 3 ===
+Sort  (cost=1569516.08..1569568.48 rows=20958 width=36) (actual time=1118.955..1122.385 rows=20951 loops=1)
+  Sort Key: ($2) DESC
+  Sort Method: quicksort  Memory: 2081kB
+  Buffers: shared hit=1012516 read=62347
+  ->  Nested Loop  (cost=75.16..1568011.80 rows=20958 width=36) (actual time=5.104..1112.495 rows=20951 loops=1)
+        Buffers: shared hit=1012513 read=62347
+        ->  Index Only Scan using idx_channels_monetization on channels c  (cost=0.41..1026.47 rows=20958 width=20) (actual time=0.038..2.961 rows=20951 loops=1)
+              Index Cond: (monetization_status = 'ELIGIBLE'::text)
+              Heap Fetches: 0
+              Buffers: shared hit=1 read=152
+        ->  Result  (cost=74.75..74.76 rows=1 width=16) (actual time=0.053..0.053 rows=1 loops=20951)
+              Buffers: shared hit=1012512 read=62195
+              InitPlan 1 (returns $2)
+                ->  Aggregate  (cost=73.68..73.69 rows=1 width=8) (actual time=0.050..0.050 rows=1 loops=20951)
+                      Buffers: shared hit=953652 read=58199
+                      ->  Nested Loop  (cost=0.85..73.46 rows=87 width=0) (actual time=0.005..0.047 rows=67 loops=20951)
+                            Buffers: shared hit=953652 read=58199
+                            ->  Index Only Scan using idx_videos_channel_uploaded on videos v2  (cost=0.42..8.65 rows=13 width=12) (actual time=0.001..0.002 rows=10 loops=20951)
+                                  Index Cond: (channel_id = c.channel_id)
+                                  Heap Fetches: 20
+                                  Buffers: shared hit=62874 read=2018
+                            ->  Index Only Scan using idx_watch_events_video_user on watch_events w  (cost=0.43..4.90 rows=9 width=12) (actual time=0.003..0.004 rows=7 loops=210373)
+                                  Index Cond: (video_id = v2.video_id)
+                                  Heap Fetches: 0
+                                  Buffers: shared hit=890778 read=56181
+              InitPlan 2 (returns $3)
+                ->  Limit  (cost=0.42..1.06 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=20951)
+                      Buffers: shared hit=58860 read=3996
+                      ->  Index Only Scan using idx_videos_channel_uploaded on videos v  (cost=0.42..8.69 rows=13 width=8) (actual time=0.002..0.002 rows=1 loops=20951)
+                            Index Cond: ((channel_id = c.channel_id) AND (uploaded_at IS NOT NULL))
+                            Heap Fetches: 2
+                            Buffers: shared hit=58860 read=3996
+Planning:
+  Buffers: shared hit=508 read=53
+Planning Time: 1.313 ms
+Execution Time: 1123.263 ms

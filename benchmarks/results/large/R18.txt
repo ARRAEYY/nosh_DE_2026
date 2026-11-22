@@ -1,0 +1,54 @@
+=== R18 run 1 ===
+Gather Merge  (cost=1000.72..8960.17 rows=5412 width=40) (actual time=3.176..25.241 rows=7621 loops=1)
+  Workers Planned: 1
+  Workers Launched: 1
+  Buffers: shared hit=25232 read=4143
+  ->  Nested Loop Semi Join  (cost=0.71..7351.31 rows=3184 width=40) (actual time=0.046..15.448 rows=3810 loops=2)
+        Buffers: shared hit=25232 read=4143
+        ->  Parallel Index Only Scan using idx_videos_made_for_kids on videos v  (cost=0.29..454.87 rows=5459 width=40) (actual time=0.021..0.620 rows=4882 loops=2)
+              Heap Fetches: 2
+              Buffers: shared hit=2 read=78
+        ->  Index Only Scan using idx_comments_video on comments c  (cost=0.43..2.48 rows=3 width=12) (actual time=0.003..0.003 rows=1 loops=9764)
+              Index Cond: (video_id = v.video_id)
+              Heap Fetches: 0
+              Buffers: shared hit=25230 read=4065
+Planning:
+  Buffers: shared hit=297 read=40
+Planning Time: 0.776 ms
+Execution Time: 25.576 ms
+=== R18 run 2 ===
+Gather Merge  (cost=1000.72..8960.17 rows=5412 width=40) (actual time=2.789..33.315 rows=7621 loops=1)
+  Workers Planned: 1
+  Workers Launched: 1
+  Buffers: shared hit=29375
+  ->  Nested Loop Semi Join  (cost=0.71..7351.31 rows=3184 width=40) (actual time=0.032..18.484 rows=3810 loops=2)
+        Buffers: shared hit=29375
+        ->  Parallel Index Only Scan using idx_videos_made_for_kids on videos v  (cost=0.29..454.87 rows=5459 width=40) (actual time=0.014..0.507 rows=4882 loops=2)
+              Heap Fetches: 2
+              Buffers: shared hit=80
+        ->  Index Only Scan using idx_comments_video on comments c  (cost=0.43..2.48 rows=3 width=12) (actual time=0.003..0.003 rows=1 loops=9764)
+              Index Cond: (video_id = v.video_id)
+              Heap Fetches: 0
+              Buffers: shared hit=29295
+Planning:
+  Buffers: shared hit=337
+Planning Time: 0.575 ms
+Execution Time: 33.615 ms
+=== R18 run 3 ===
+Gather Merge  (cost=1000.72..8960.17 rows=5412 width=40) (actual time=2.826..22.133 rows=7621 loops=1)
+  Workers Planned: 1
+  Workers Launched: 1
+  Buffers: shared hit=29375
+  ->  Nested Loop Semi Join  (cost=0.71..7351.31 rows=3184 width=40) (actual time=0.033..12.531 rows=3810 loops=2)
+        Buffers: shared hit=29375
+        ->  Parallel Index Only Scan using idx_videos_made_for_kids on videos v  (cost=0.29..454.87 rows=5459 width=40) (actual time=0.014..0.507 rows=4882 loops=2)
+              Heap Fetches: 2
+              Buffers: shared hit=80
+        ->  Index Only Scan using idx_comments_video on comments c  (cost=0.43..2.48 rows=3 width=12) (actual time=0.002..0.002 rows=1 loops=9764)
+              Index Cond: (video_id = v.video_id)
+              Heap Fetches: 0
+              Buffers: shared hit=29295
+Planning:
+  Buffers: shared hit=337
+Planning Time: 0.570 ms
+Execution Time: 22.435 ms

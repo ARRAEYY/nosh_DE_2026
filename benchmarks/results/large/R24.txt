@@ -1,0 +1,48 @@
+=== R24 run 1 ===
+GroupAggregate  (cost=11.69..12.99 rows=65 width=16) (actual time=0.198..0.261 rows=42 loops=1)
+  Group Key: (date_trunc('month'::text, subscribed_at))
+  Buffers: shared hit=3 read=6
+  ->  Sort  (cost=11.69..11.85 rows=65 width=8) (actual time=0.192..0.213 rows=531 loops=1)
+        Sort Key: (date_trunc('month'::text, subscribed_at))
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=3 read=6
+        ->  Index Only Scan using idx_subscriptions_channel_subscribed on subscriptions  (cost=0.43..9.73 rows=65 width=8) (actual time=0.056..0.154 rows=531 loops=1)
+              Index Cond: (channel_id = 217)
+              Heap Fetches: 0
+              Buffers: shared read=6
+Planning:
+  Buffers: shared hit=112 read=4
+Planning Time: 0.294 ms
+Execution Time: 0.305 ms
+=== R24 run 2 ===
+GroupAggregate  (cost=11.69..12.99 rows=65 width=16) (actual time=0.160..0.223 rows=42 loops=1)
+  Group Key: (date_trunc('month'::text, subscribed_at))
+  Buffers: shared hit=9
+  ->  Sort  (cost=11.69..11.85 rows=65 width=8) (actual time=0.156..0.176 rows=531 loops=1)
+        Sort Key: (date_trunc('month'::text, subscribed_at))
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=9
+        ->  Index Only Scan using idx_subscriptions_channel_subscribed on subscriptions  (cost=0.43..9.73 rows=65 width=8) (actual time=0.029..0.120 rows=531 loops=1)
+              Index Cond: (channel_id = 217)
+              Heap Fetches: 0
+              Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.262 ms
+Execution Time: 0.260 ms
+=== R24 run 3 ===
+GroupAggregate  (cost=11.69..12.99 rows=65 width=16) (actual time=0.158..0.225 rows=42 loops=1)
+  Group Key: (date_trunc('month'::text, subscribed_at))
+  Buffers: shared hit=9
+  ->  Sort  (cost=11.69..11.85 rows=65 width=8) (actual time=0.154..0.178 rows=531 loops=1)
+        Sort Key: (date_trunc('month'::text, subscribed_at))
+        Sort Method: quicksort  Memory: 25kB
+        Buffers: shared hit=9
+        ->  Index Only Scan using idx_subscriptions_channel_subscribed on subscriptions  (cost=0.43..9.73 rows=65 width=8) (actual time=0.027..0.119 rows=531 loops=1)
+              Index Cond: (channel_id = 217)
+              Heap Fetches: 0
+              Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.252 ms
+Execution Time: 0.267 ms

@@ -1,0 +1,51 @@
+=== R23 run 1 ===
+Limit  (cost=1514.77..1516.09 rows=25 width=48) (actual time=5.054..5.059 rows=25 loops=1)
+  Buffers: shared hit=4 read=268
+  InitPlan 1 (returns $0,$1)
+    ->  Limit  (cost=1514.29..1514.34 rows=1 width=12) (actual time=5.022..5.024 rows=1 loops=1)
+          Buffers: shared read=268
+          ->  Index Only Scan using idx_comments_created_id_desc on comments comments_1  (cost=0.43..60496.14 rows=1198835 width=12) (actual time=0.042..4.103 rows=30001 loops=1)
+                Heap Fetches: 0
+                Buffers: shared read=268
+  ->  Index Only Scan using idx_comments_created_id_desc on comments  (cost=0.43..21197.83 rows=399612 width=48) (actual time=5.053..5.055 rows=25 loops=1)
+        Index Cond: (ROW(created_at, comment_id) <= ROW($0, $1))
+        Heap Fetches: 0
+        Buffers: shared hit=4 read=268
+Planning:
+  Buffers: shared hit=170 read=7
+Planning Time: 0.494 ms
+Execution Time: 5.114 ms
+=== R23 run 2 ===
+Limit  (cost=1514.77..1516.09 rows=25 width=48) (actual time=4.341..4.346 rows=25 loops=1)
+  Buffers: shared hit=272
+  InitPlan 1 (returns $0,$1)
+    ->  Limit  (cost=1514.29..1514.34 rows=1 width=12) (actual time=4.314..4.315 rows=1 loops=1)
+          Buffers: shared hit=268
+          ->  Index Only Scan using idx_comments_created_id_desc on comments comments_1  (cost=0.43..60496.14 rows=1198835 width=12) (actual time=0.023..3.344 rows=30001 loops=1)
+                Heap Fetches: 0
+                Buffers: shared hit=268
+  ->  Index Only Scan using idx_comments_created_id_desc on comments  (cost=0.43..21197.83 rows=399612 width=48) (actual time=4.340..4.342 rows=25 loops=1)
+        Index Cond: (ROW(created_at, comment_id) <= ROW($0, $1))
+        Heap Fetches: 0
+        Buffers: shared hit=272
+Planning:
+  Buffers: shared hit=177
+Planning Time: 0.364 ms
+Execution Time: 4.399 ms
+=== R23 run 3 ===
+Limit  (cost=1514.77..1516.09 rows=25 width=48) (actual time=4.203..4.208 rows=25 loops=1)
+  Buffers: shared hit=272
+  InitPlan 1 (returns $0,$1)
+    ->  Limit  (cost=1514.29..1514.34 rows=1 width=12) (actual time=4.181..4.182 rows=1 loops=1)
+          Buffers: shared hit=268
+          ->  Index Only Scan using idx_comments_created_id_desc on comments comments_1  (cost=0.43..60496.14 rows=1198835 width=12) (actual time=0.018..3.270 rows=30001 loops=1)
+                Heap Fetches: 0
+                Buffers: shared hit=268
+  ->  Index Only Scan using idx_comments_created_id_desc on comments  (cost=0.43..21197.83 rows=399612 width=48) (actual time=4.203..4.205 rows=25 loops=1)
+        Index Cond: (ROW(created_at, comment_id) <= ROW($0, $1))
+        Heap Fetches: 0
+        Buffers: shared hit=272
+Planning:
+  Buffers: shared hit=177
+Planning Time: 0.350 ms
+Execution Time: 4.252 ms

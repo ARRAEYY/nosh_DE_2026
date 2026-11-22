@@ -1,0 +1,27 @@
+=== R06 run 1 ===
+Index Only Scan using idx_videos_scheduled_published on videos  (cost=0.28..81.16 rows=965 width=48) (actual time=0.393..0.826 rows=406 loops=1)
+  Index Cond: (published_at < '2026-07-08 00:00:00+00'::timestamp with time zone)
+  Heap Fetches: 0
+  Buffers: shared hit=1 read=5
+Planning:
+  Buffers: shared hit=204
+Planning Time: 0.307 ms
+Execution Time: 0.850 ms
+=== R06 run 2 ===
+Index Only Scan using idx_videos_scheduled_published on videos  (cost=0.28..81.16 rows=965 width=48) (actual time=0.016..0.057 rows=406 loops=1)
+  Index Cond: (published_at < '2026-07-08 00:00:00+00'::timestamp with time zone)
+  Heap Fetches: 0
+  Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=204
+Planning Time: 0.332 ms
+Execution Time: 0.081 ms
+=== R06 run 3 ===
+Index Only Scan using idx_videos_scheduled_published on videos  (cost=0.28..81.16 rows=965 width=48) (actual time=0.021..0.066 rows=406 loops=1)
+  Index Cond: (published_at < '2026-07-08 00:00:00+00'::timestamp with time zone)
+  Heap Fetches: 0
+  Buffers: shared hit=6
+Planning:
+  Buffers: shared hit=204
+Planning Time: 0.317 ms
+Execution Time: 0.090 ms

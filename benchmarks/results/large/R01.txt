@@ -1,0 +1,33 @@
+=== R01 run 1 ===
+Limit  (cost=0.42..2.48 rows=20 width=56) (actual time=0.848..0.852 rows=20 loops=1)
+  Buffers: shared read=4
+  ->  Index Only Scan using idx_videos_channel_published_public on videos  (cost=0.42..14.89 rows=141 width=56) (actual time=0.846..0.849 rows=20 loops=1)
+        Index Cond: (channel_id = 217)
+        Heap Fetches: 0
+        Buffers: shared read=4
+Planning:
+  Buffers: shared hit=198 read=10
+Planning Time: 1.114 ms
+Execution Time: 0.873 ms
+=== R01 run 2 ===
+Limit  (cost=0.42..2.48 rows=20 width=56) (actual time=0.014..0.019 rows=20 loops=1)
+  Buffers: shared hit=4
+  ->  Index Only Scan using idx_videos_channel_published_public on videos  (cost=0.42..14.89 rows=141 width=56) (actual time=0.013..0.016 rows=20 loops=1)
+        Index Cond: (channel_id = 217)
+        Heap Fetches: 0
+        Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=213
+Planning Time: 0.351 ms
+Execution Time: 0.034 ms
+=== R01 run 3 ===
+Limit  (cost=0.42..2.48 rows=20 width=56) (actual time=0.014..0.018 rows=20 loops=1)
+  Buffers: shared hit=4
+  ->  Index Only Scan using idx_videos_channel_published_public on videos  (cost=0.42..14.89 rows=141 width=56) (actual time=0.013..0.015 rows=20 loops=1)
+        Index Cond: (channel_id = 217)
+        Heap Fetches: 0
+        Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=213
+Planning Time: 0.349 ms
+Execution Time: 0.034 ms
